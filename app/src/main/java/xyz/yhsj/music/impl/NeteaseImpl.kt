@@ -7,10 +7,8 @@ import com.github.kittinunf.result.Result
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import xyz.yhsj.music.entity.common.Singer
 import xyz.yhsj.music.entity.common.Song
 import xyz.yhsj.music.entity.netease.NeteaseMusic
-import xyz.yhsj.music.utils.LogUtil
 
 object NeteaseImpl : Impl {
 
