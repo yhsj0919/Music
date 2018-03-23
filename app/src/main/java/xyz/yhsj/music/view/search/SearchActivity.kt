@@ -1,13 +1,18 @@
 package xyz.yhsj.music.view.search
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.media.MediaPlayer
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.widget.Toast
+import com.jaeger.library.StatusBarUtil
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_search.*
 import xyz.yhsj.music.R
 import xyz.yhsj.music.impl.Impl
@@ -38,8 +43,20 @@ class SearchActivity : BaseActivity() {
 
 
     override fun init() {
+        supportActionBar!!.title = ""
+        StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_qq), 0)
 
         mPlayer = MediaPlayer()
+
+        mPlayer?.setOnErrorListener { mp, what, extra ->
+
+            mp.reset()// 重置
+            if (what < 0) {
+                Snackbar.make(recyclerView, "播放失败,可能因为该歌曲不存在,或者需要付费,请换个网站试试", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+            }
+            return@setOnErrorListener true
+        }
 
         //默认刚进去就打开搜索栏
         searchView.isIconified = false
@@ -60,14 +77,23 @@ class SearchActivity : BaseActivity() {
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.rb_qq -> {
+                    toolbarLay.setBackgroundColor(resources.getColor(R.color.color_qq))
+                    radioGroup.setBackgroundColor(resources.getColor(R.color.color_qq))
+                    StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_qq), 0)
                     musicImpl = QQImpl
                     search()
                 }
                 R.id.rb_netease -> {
+                    toolbarLay.setBackgroundColor(resources.getColor(R.color.color_netease))
+                    radioGroup.setBackgroundColor(resources.getColor(R.color.color_netease))
+                    StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_netease), 0)
                     musicImpl = NeteaseImpl
                     search()
                 }
                 R.id.rb_xiami -> {
+                    toolbarLay.setBackgroundColor(resources.getColor(R.color.color_xiami))
+                    radioGroup.setBackgroundColor(resources.getColor(R.color.color_xiami))
+                    StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_xiami), 0)
                     musicImpl = XiamiImpl
                     search()
                 }
@@ -76,13 +102,9 @@ class SearchActivity : BaseActivity() {
 
         listAdapter.setOnItemClickListener { viewGroup, view, i ->
             LogUtil.e("点击的结果", listAdapter.data[i].toString())
+            Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].name}", Toast.LENGTH_SHORT).show()
 
-
-            if (mPlayer?.isPlaying == true) {
-                mPlayer?.stop()
-                mPlayer?.reset();// 重置
-            }
-
+            mPlayer?.reset()// 重置
 
             try {
                 //调用setDataSource方法，传入音频文件的http位置，此时处于Initialized状态
@@ -90,9 +112,11 @@ class SearchActivity : BaseActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            mPlayer?.prepareAsync();
+            mPlayer?.prepareAsync()
 
             Observable.timer(3, TimeUnit.SECONDS)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         mPlayer?.start()
                     }
@@ -143,7 +167,9 @@ class SearchActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mPlayer?.stop();
+        if (mPlayer?.isPlaying == true) {
+            mPlayer?.stop()
+        }
     }
 
 }

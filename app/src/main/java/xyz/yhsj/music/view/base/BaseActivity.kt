@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.support.v4.view.WindowCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.Menu
 import android.view.MenuItem
+import xyz.yhsj.music.R
 
 /**
  * BaseActivity
@@ -16,7 +18,6 @@ abstract class BaseActivity : AppCompatActivity() {
      */
     protected abstract val layoutId: Int
 
-
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY)
@@ -25,7 +26,7 @@ abstract class BaseActivity : AppCompatActivity() {
         if (_toolBar != null) {
             setSupportActionBar(_toolBar)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            supportActionBar!!.title = ""
+            supportActionBar!!.setHomeAsUpIndicator(R.mipmap.ic_return)
         }
         init()
     }
@@ -39,6 +40,21 @@ abstract class BaseActivity : AppCompatActivity() {
      * 初始化功能
      */
     protected abstract fun init()
+
+
+    open fun getMenuId(): Int = 0
+
+    final override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
+        val menuId = getMenuId()
+
+        return if (menuId != 0) {
+            menuInflater.inflate(menuId, menu)
+            true
+        } else {
+            return super.onCreateOptionsMenu(menu)
+        }
+    }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -13,9 +13,10 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <FrameLayout
+            android:id="@+id/toolbarLay"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
+            android:background="@color/color_qq">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -38,28 +39,31 @@
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:layout_height="40dp"
+            android:background="@color/color_qq"
             android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/rb_qq"
-                android:layout_width="70dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
+                android:button="@null"
                 android:checked="true"
-                android:text="QQ" />
+                android:drawableTop="@drawable/select_music_qq" />
 
             <RadioButton
                 android:id="@+id/rb_netease"
-                android:layout_width="70dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
-                android:text="网易" />
+                android:button="@null"
+                android:drawableTop="@drawable/select_music_netease" />
 
             <RadioButton
                 android:id="@+id/rb_xiami"
-                android:layout_width="70dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
-                android:text="虾米" />
+                android:button="@null"
+                android:drawableTop="@drawable/select_music_xiami" />
 
         </RadioGroup>
     </android.support.design.widget.AppBarLayout>
