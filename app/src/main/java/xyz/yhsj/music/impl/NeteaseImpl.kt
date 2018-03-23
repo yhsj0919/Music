@@ -10,6 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import xyz.yhsj.music.entity.common.Singer
 import xyz.yhsj.music.entity.common.Song
 import xyz.yhsj.music.entity.netease.NeteaseMusic
+import xyz.yhsj.music.utils.LogUtil
 
 object NeteaseImpl : Impl {
 
@@ -42,9 +43,13 @@ object NeteaseImpl : Impl {
                             .map {
                                 val song = Song()
                                 song.name = it.name
+                                song.songId = it.id.toString()
                                 song.albumName = it.al?.name
-                                song.source = "netease"
                                 song.singer = it.singer[0].name
+                                song.playUrl = "http://music.163.com/song/media/outer/url?id=${it.id}.mp3"
+                                song.picUrl = it.al?.picUrl
+                                song.lrcUrl = "http://music.163.com/api/song/lyric?id=${it.id}&lv=1&kv=1&tv=-1"
+                                song.source = "netease"
 
                                 song
 
@@ -56,6 +61,6 @@ object NeteaseImpl : Impl {
     }
 
     override fun getUrl(id: String) {
-
+        "http://music.163.com/song/media/outer/url?id=$id.mp3"
     }
 }

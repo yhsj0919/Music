@@ -10,6 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import xyz.yhsj.music.entity.common.Singer
 import xyz.yhsj.music.entity.common.Song
 import xyz.yhsj.music.entity.qq.QQMusic
+import xyz.yhsj.music.utils.LogUtil
 
 object QQImpl : Impl {
     override fun search(key: String): Single<List<Song>> {
@@ -34,9 +35,13 @@ object QQImpl : Impl {
                             .map {
                                 val song = Song()
                                 song.name = it.name
+                                song.songId = it.songmid
                                 song.albumName = it.albumname
-                                song.source = "qq"
                                 song.singer = it.singer[0].name
+                                song.playUrl = "http://ws.stream.qqmusic.qq.com/C100${it.songmid}.m4a?fromtag=38"
+                                song.picUrl = "https://y.gtimg.cn/music/photo_new/T002R300x300M000${it.albummid}.jpg?max_age=2592000"
+                                song.lrcUrl = "http://music.qq.com/miniportal/static/lyric/${(it.songid ?: 0) % 100}/${it.songid}.xml"
+                                song.source = "qq"
                                 song
                             }
                     songs
@@ -46,6 +51,6 @@ object QQImpl : Impl {
     }
 
     override fun getUrl(id: String) {
-
+        "http://ws.stream.qqmusic.qq.com/C100$id.m4a?fromtag=38"
     }
 }

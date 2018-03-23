@@ -12,6 +12,7 @@ import xyz.yhsj.music.impl.Impl
 import xyz.yhsj.music.impl.NeteaseImpl
 import xyz.yhsj.music.impl.QQImpl
 import xyz.yhsj.music.impl.XiamiImpl
+import xyz.yhsj.music.utils.LogUtil
 import xyz.yhsj.music.view.base.BaseActivity
 import xyz.yhsj.music.view.search.adapter.SearchListAdapter
 
@@ -26,7 +27,7 @@ class SearchActivity : BaseActivity() {
 
     override fun getToolbar(): Toolbar? = toolbar
 
-    private var listAdapter: SearchListAdapter? = null
+    lateinit var listAdapter: SearchListAdapter
 
     private var musicImpl: Impl = QQImpl
 
@@ -65,14 +66,14 @@ class SearchActivity : BaseActivity() {
             }
         }
 
+        listAdapter.setOnItemClickListener { viewGroup, view, i ->
+            LogUtil.e("点击的结果", listAdapter.data[i].toString())
+        }
+
         swipeRefreshLayout.setOnRefreshListener {
             search()
         }
-
-        searchView.setOnCloseListener {
-//            Toast.makeText(this@SearchActivity, "点击了关闭", Toast.LENGTH_SHORT).show()
-            true
-        }
+        searchView.setOnCloseListener { true }
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query.isNullOrEmpty()) {

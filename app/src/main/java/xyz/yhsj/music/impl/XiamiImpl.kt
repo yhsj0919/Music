@@ -10,6 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import xyz.yhsj.music.entity.common.Singer
 import xyz.yhsj.music.entity.common.Song
 import xyz.yhsj.music.entity.xiami.XiamiMusic
+import xyz.yhsj.music.utils.LogUtil
 
 object XiamiImpl : Impl {
 
@@ -40,9 +41,13 @@ object XiamiImpl : Impl {
                             .map {
                                 val song = Song()
                                 song.name = it.songName
+                                song.songId = it.songId.toString()
                                 song.albumName = it.albumName
-                                song.source = "xiami"
                                 song.singer = it.artistName
+                                song.playUrl = it.listenFile
+                                song.lrcUrl = it.lyric
+                                song.picUrl = it.artistLogo
+                                song.source = "xiami"
                                 song
                             }
                     songs
