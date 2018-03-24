@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
+import xyz.yhsj.music.service.MusicService
 import xyz.yhsj.music.view.base.BaseActivity
 import xyz.yhsj.music.view.search.SearchActivity
 
@@ -15,6 +16,9 @@ class MainActivity : BaseActivity() {
     override fun getToolbar(): Toolbar? = toolbar
 
     override fun init() {
+
+        startService(Intent(this, MusicService::class.java))
+
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         fab.setOnClickListener { view ->

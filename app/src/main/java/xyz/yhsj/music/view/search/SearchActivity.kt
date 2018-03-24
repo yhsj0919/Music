@@ -1,9 +1,11 @@
 package xyz.yhsj.music.view.search
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.support.design.widget.Snackbar
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -19,6 +21,7 @@ import xyz.yhsj.music.impl.Impl
 import xyz.yhsj.music.impl.NeteaseImpl
 import xyz.yhsj.music.impl.QQImpl
 import xyz.yhsj.music.impl.XiamiImpl
+import xyz.yhsj.music.utils.BroadcastAction
 import xyz.yhsj.music.utils.LogUtil
 import xyz.yhsj.music.view.base.BaseActivity
 import xyz.yhsj.music.view.search.adapter.SearchListAdapter
@@ -104,22 +107,27 @@ class SearchActivity : BaseActivity() {
             LogUtil.e("点击的结果", listAdapter.data[i].toString())
             Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].name}", Toast.LENGTH_SHORT).show()
 
-            mPlayer?.reset()// 重置
+            val intent = Intent(BroadcastAction.ACTION_OPT_MUSIC_PLAY)
+            intent.putExtra(BroadcastAction.ACTION_OPT_MUSIC_PLAY, listAdapter.data[i])
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 
-            try {
-                //调用setDataSource方法，传入音频文件的http位置，此时处于Initialized状态
-                mPlayer?.setDataSource(listAdapter.data[i].playUrl)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            mPlayer?.prepareAsync()
 
-            Observable.timer(3, TimeUnit.SECONDS)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        mPlayer?.start()
-                    }
+//            mPlayer?.reset()// 重置
+//
+//            try {
+//                //调用setDataSource方法，传入音频文件的http位置，此时处于Initialized状态
+//                mPlayer?.setDataSource(listAdapter.data[i].playUrl)
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//            mPlayer?.prepareAsync()
+//
+//            Observable.timer(3, TimeUnit.SECONDS)
+//                    .subscribeOn(Schedulers.newThread())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe {
+//                        mPlayer?.start()
+//                    }
 
         }
 

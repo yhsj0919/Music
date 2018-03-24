@@ -1,5 +1,7 @@
 package xyz.yhsj.music.entity.common
 
+import java.io.Serializable
+
 
 data class Song(
         //歌曲名
@@ -19,4 +21,4 @@ data class Song(
         //歌词
         var lrcUrl: String? = null
 
-)
+) : Serializable
