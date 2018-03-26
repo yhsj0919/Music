@@ -29,6 +29,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".service.MusicService" />
+
+        <activity android:name=".view.play.PlayActivity"></activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import xyz.yhsj.music.service.MusicService
 import xyz.yhsj.music.view.base.BaseActivity
+import xyz.yhsj.music.view.play.PlayActivity
 import xyz.yhsj.music.view.search.SearchActivity
 
 
@@ -24,6 +25,8 @@ class MainActivity : BaseActivity() {
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
+
+            startActivity(Intent(this, PlayActivity::class.java))
 
         }
     }
