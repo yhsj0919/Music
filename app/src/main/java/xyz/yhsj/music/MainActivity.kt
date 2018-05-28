@@ -5,10 +5,13 @@ import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
-import xyz.yhsj.music.service.MusicService
+import xyz.yhsj.kmusic.impl.MusicImpl
+import xyz.yhsj.kmusic.site.MusicSite
+
+import xyz.yhsj.music.utils.LogUtil
 import xyz.yhsj.music.view.base.BaseActivity
-import xyz.yhsj.music.view.play.PlayActivity
 import xyz.yhsj.music.view.search.SearchActivity
+import kotlin.concurrent.thread
 
 
 class MainActivity : BaseActivity() {
@@ -18,16 +21,30 @@ class MainActivity : BaseActivity() {
 
     override fun init() {
 
-        startService(Intent(this, MusicService::class.java))
-
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
 
-            startActivity(Intent(this, PlayActivity::class.java))
+            thread {
 
+                MusicImpl.search(key = "薛之谦").data?.forEach {
+
+                    LogUtil.e(mMsg = it.code)
+                    LogUtil.e(mMsg = it.msg)
+                    LogUtil.e(mMsg = it.title)
+                    LogUtil.e(mMsg = it.songid)
+                    LogUtil.e(mMsg = it.link)
+                    LogUtil.e(mMsg = it.author)
+                    LogUtil.e(mMsg = it.pic)
+                    LogUtil.e(mMsg = it.url)
+                    LogUtil.e(mMsg = it.lrc)
+                    LogUtil.e(mMsg = "")
+                }
+            }
+
+//            startActivity(Intent(this, PlayActivity::class.java))
         }
     }
 

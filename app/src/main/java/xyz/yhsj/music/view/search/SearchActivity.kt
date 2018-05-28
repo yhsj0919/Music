@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.media.MediaPlayer
 import android.support.design.widget.Snackbar
-import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -12,13 +11,11 @@ import android.support.v7.widget.Toolbar
 import android.widget.Toast
 import com.jaeger.library.StatusBarUtil
 import kotlinx.android.synthetic.main.activity_search.*
+import xyz.yhsj.kmusic.impl.MusicImpl
+import xyz.yhsj.kmusic.site.MusicSite
 import xyz.yhsj.music.R
-import xyz.yhsj.music.impl.Impl
-import xyz.yhsj.music.impl.NeteaseImpl
-import xyz.yhsj.music.impl.QQImpl
-import xyz.yhsj.music.impl.XiamiImpl
-import xyz.yhsj.music.utils.MusicAction
 import xyz.yhsj.music.utils.LogUtil
+import xyz.yhsj.music.utils.rxSearch
 import xyz.yhsj.music.view.base.BaseActivity
 import xyz.yhsj.music.view.play.PlayActivity
 import xyz.yhsj.music.view.search.adapter.SearchListAdapter
@@ -36,9 +33,9 @@ class SearchActivity : BaseActivity() {
 
     lateinit var listAdapter: SearchListAdapter
 
-    private var musicImpl: Impl = QQImpl
-
     private var mPlayer: MediaPlayer? = null
+
+    private var site = MusicSite.QQ
 
 
     override fun init() {
@@ -79,21 +76,21 @@ class SearchActivity : BaseActivity() {
                     toolbarLay.setBackgroundColor(resources.getColor(R.color.color_qq))
                     radioGroup.setBackgroundColor(resources.getColor(R.color.color_qq))
                     StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_qq), 0)
-                    musicImpl = QQImpl
+                    site = MusicSite.QQ
                     search()
                 }
                 R.id.rb_netease -> {
                     toolbarLay.setBackgroundColor(resources.getColor(R.color.color_netease))
                     radioGroup.setBackgroundColor(resources.getColor(R.color.color_netease))
                     StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_netease), 0)
-                    musicImpl = NeteaseImpl
+                    site = MusicSite.NETEASE
                     search()
                 }
                 R.id.rb_xiami -> {
                     toolbarLay.setBackgroundColor(resources.getColor(R.color.color_xiami))
                     radioGroup.setBackgroundColor(resources.getColor(R.color.color_xiami))
                     StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_xiami), 0)
-                    musicImpl = XiamiImpl
+                    site = MusicSite.XIAMI
                     search()
                 }
             }
@@ -101,30 +98,13 @@ class SearchActivity : BaseActivity() {
 
         listAdapter.setOnItemClickListener { viewGroup, view, i ->
             LogUtil.e("点击的结果", listAdapter.data[i].toString())
-            Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].name}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].title}", Toast.LENGTH_SHORT).show()
 
             val intent = Intent(this, PlayActivity::class.java)
 
-            intent.putExtra(MusicAction.PLAY_DATA, listAdapter.data[i])
+            intent.putExtra("data", listAdapter.data[i])
 
             startActivity(intent)
-
-//            mPlayer?.reset()// 重置
-//
-//            try {
-//                //调用setDataSource方法，传入音频文件的http位置，此时处于Initialized状态
-//                mPlayer?.setDataSource(listAdapter.data[i].playUrl)
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//            mPlayer?.prepareAsync()
-//
-//            Observable.timer(3, TimeUnit.SECONDS)
-//                    .subscribeOn(Schedulers.newThread())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe {
-//                        mPlayer?.start()
-//                    }
 
         }
 
@@ -160,13 +140,15 @@ class SearchActivity : BaseActivity() {
             return
         }
         swipeRefreshLayout.isRefreshing = true
-        if (musicImpl == null) {
-            musicImpl = QQImpl
-        }
-        musicImpl.search(key!!)
-                .subscribe { t1, t2 ->
+
+        MusicImpl.rxSearch(key = key!!, site = site)
+                .subscribe {
                     swipeRefreshLayout.isRefreshing = false
-                    listAdapter.data = t1
+                    if (it.code == 200) {
+                        listAdapter.data = it.data
+                    } else {
+                        Toast.makeText(this@SearchActivity, it.msg, Toast.LENGTH_SHORT).show()
+                    }
                 }
     }
 
