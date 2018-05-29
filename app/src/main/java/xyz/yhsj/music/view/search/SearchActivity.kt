@@ -14,12 +14,18 @@ import com.jaeger.library.StatusBarUtil
 import kotlinx.android.synthetic.main.activity_search.*
 import xyz.yhsj.kmusic.impl.MusicImpl
 import xyz.yhsj.kmusic.site.MusicSite
+import xyz.yhsj.mediabrowser.client.MusicManager
 import xyz.yhsj.music.R
 import xyz.yhsj.music.utils.LogUtil
 import xyz.yhsj.music.utils.rxSearch
 import xyz.yhsj.music.view.base.BaseActivity
 import xyz.yhsj.music.view.play.PlayActivity
 import xyz.yhsj.music.view.search.adapter.SearchListAdapter
+import android.support.v4.media.MediaMetadataCompat
+import xyz.yhsj.mediabrowser.client.listener.OnSaveRecordListener
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import xyz.yhsj.music.entity.PlayMusicEntity
 
 
 @SuppressLint("Registered")
@@ -36,6 +42,9 @@ class SearchActivity : BaseActivity() {
 
     private var site = MusicSite.QQ
 
+    var mMusicManager: MusicManager? = null
+
+    private var mIsPlaying: Boolean = false
 
     override fun init() {
         supportActionBar!!.title = ""
@@ -53,10 +62,51 @@ class SearchActivity : BaseActivity() {
         //添加Android自带的分割线
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
+
+        if (mMusicManager == null) {
+            mMusicManager = MusicManager.getInstance()
+        }
+        mMusicManager?.init(this)
+
         initListener()
     }
 
     private fun initListener() {
+
+        action_play.setOnClickListener {
+            if (mIsPlaying) {
+                if (mMusicManager != null) {
+                    mMusicManager?.pause()
+                }
+            } else {
+                if (mMusicManager != null) {
+                    mMusicManager?.play()
+                }
+            }
+        }
+
+
+        action_next.setOnClickListener {
+            if (mMusicManager != null) {
+                mMusicManager?.skipToNext()
+            }
+
+        }
+
+        action_previous.setOnClickListener {
+            if (mMusicManager != null) {
+                mMusicManager?.skipToPrevious()
+            }
+
+        }
+
+
+        // 音频变化的监听类
+        mMusicManager?.addOnAudioStatusListener(mAudioStatusChangeListener);
+        // 记录播放记录的监听
+        mMusicManager?.addOnRecorListener(mOnRecordListener);
+
+
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             listAdapter.clear()
 
@@ -106,6 +156,14 @@ class SearchActivity : BaseActivity() {
             LogUtil.e("点击的结果", listAdapter.data[i].toString())
 
             Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].title}", Toast.LENGTH_SHORT).show()
+
+            val musicList = listAdapter.data.map {
+                PlayMusicEntity(it)
+            }
+
+            mMusicManager?.playMusicList(musicList, i)
+
+            mMusicManager?.play()
 
         }
 
@@ -162,4 +220,105 @@ class SearchActivity : BaseActivity() {
                     }
                 }
     }
+
+
+    private fun setControlBg(isPlaying: Boolean) {
+        if (isPlaying) {
+            action_play.text = "停"
+        } else {
+            action_play.text = "播"
+        }
+    }
+
+
+    /**
+     * 音频变化回调
+     */
+    var mAudioStatusChangeListener: MusicManager.OnAudioStatusChangeListener = object : MusicManager.OnAudioStatusChangeListener {
+        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+            // 播放音频 状态变化
+            onMediaPlaybackStateChanged(state)
+        }
+
+        override fun onMetadataChanged(metadata: MediaMetadataCompat) {
+            // 播放音频变化的回调
+            onMediaMetadataChanged(metadata)
+        }
+
+        override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) {
+            // TODO 播放队列发生变化
+        }
+    }
+
+    /**
+     * 记录播放位置的回调
+     */
+    var mOnRecordListener: OnSaveRecordListener = OnSaveRecordListener { mediaMetadataCompat, postion ->
+
+        LogUtil.e(mMsg = postion)
+
+        // TODO 保存播放记录用
+    }
+
+    /**
+     * 音频播放状态变化的回调
+     *
+     * @param playbackState
+     */
+    private fun onMediaPlaybackStateChanged(playbackState: PlaybackStateCompat?) {
+        if (playbackState == null) {
+            return
+        }
+        // 正在播放
+        mIsPlaying = playbackState.state == PlaybackStateCompat.STATE_PLAYING
+
+        // 更新UI
+        setControlBg(mIsPlaying)
+
+        /**
+         * 设置播放进度
+         */
+        val progress = playbackState.position.toInt()
+
+        println("播放进度: ${progress}   ${playbackState.playbackSpeed}")
+
+        when (playbackState.state) {
+            PlaybackStateCompat.STATE_PLAYING -> {
+                println("正在播放")
+            }
+            PlaybackStateCompat.STATE_PAUSED -> println("暂停播放")
+        }
+    }
+
+
+    /**
+     * 播放音频数据 发生变化的回调
+     *
+     * @param mediaMetadata
+     */
+    private fun onMediaMetadataChanged(mediaMetadata: MediaMetadataCompat?) {
+        if (mediaMetadata == null) {
+            return
+        }
+        // 音频的标题
+        val title = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE) + "-" +
+                // 音频作者
+                mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
+
+        song_name.text = title
+
+        // 音频专辑
+        song_album.text = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM)
+
+        // 音频图片
+        //        mAlbumArtImg.setImageBitmap(MusicLibrary.getAlbumBitmap(
+        //                MainActivity.this,
+        //                mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)));
+
+        // 进度条
+        val max = mediaMetadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION).toInt() ?: 0
+        println("这是个进度条：$max")
+    }
+
+
 }

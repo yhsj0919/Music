@@ -12,14 +12,18 @@ import xyz.yhsj.music.utils.LogUtil
 import xyz.yhsj.music.view.base.BaseActivity
 import xyz.yhsj.music.view.search.SearchActivity
 import kotlin.concurrent.thread
-
+import xyz.yhsj.mediabrowser.client.MusicManager
 
 class MainActivity : BaseActivity() {
     override val layoutId: Int = R.layout.activity_main
 
     override fun getToolbar(): Toolbar? = toolbar
 
+    var mMusicManager: MusicManager? = null
     override fun init() {
+
+
+
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
