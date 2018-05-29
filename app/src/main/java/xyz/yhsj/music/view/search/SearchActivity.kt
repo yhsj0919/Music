@@ -3,6 +3,7 @@ package xyz.yhsj.music.view.search
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.media.MediaPlayer
+import android.support.annotation.ColorRes
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -33,26 +34,12 @@ class SearchActivity : BaseActivity() {
 
     lateinit var listAdapter: SearchListAdapter
 
-    private var mPlayer: MediaPlayer? = null
-
     private var site = MusicSite.QQ
 
 
     override fun init() {
         supportActionBar!!.title = ""
         StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_qq), 0)
-
-        mPlayer = MediaPlayer()
-
-        mPlayer?.setOnErrorListener { mp, what, extra ->
-
-            mp.reset()// 重置
-            if (what < 0) {
-                Snackbar.make(recyclerView, "播放失败,可能因为该歌曲不存在,或者需要付费,请换个网站试试", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show()
-            }
-            return@setOnErrorListener true
-        }
 
         //默认刚进去就打开搜索栏
         searchView.isIconified = false
@@ -71,40 +58,54 @@ class SearchActivity : BaseActivity() {
 
     private fun initListener() {
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            listAdapter.clear()
+
             when (checkedId) {
                 R.id.rb_qq -> {
-                    toolbarLay.setBackgroundColor(resources.getColor(R.color.color_qq))
-                    radioGroup.setBackgroundColor(resources.getColor(R.color.color_qq))
-                    StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_qq), 0)
+                    changeColor(R.color.color_qq)
                     site = MusicSite.QQ
                     search()
                 }
                 R.id.rb_netease -> {
-                    toolbarLay.setBackgroundColor(resources.getColor(R.color.color_netease))
-                    radioGroup.setBackgroundColor(resources.getColor(R.color.color_netease))
-                    StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_netease), 0)
+                    changeColor(R.color.color_netease)
                     site = MusicSite.NETEASE
                     search()
                 }
                 R.id.rb_xiami -> {
-                    toolbarLay.setBackgroundColor(resources.getColor(R.color.color_xiami))
-                    radioGroup.setBackgroundColor(resources.getColor(R.color.color_xiami))
-                    StatusBarUtil.setColor(this@SearchActivity, resources.getColor(R.color.color_xiami), 0)
+                    changeColor(R.color.color_xiami)
                     site = MusicSite.XIAMI
+                    search()
+                }
+                R.id.rb_baidu -> {
+                    changeColor(R.color.color_baidu)
+                    site = MusicSite.BAIDU
+                    search()
+                }
+                R.id.rb_kugou -> {
+                    changeColor(R.color.color_kugou)
+                    site = MusicSite.KUGOU
+                    search()
+                }
+
+                R.id.rb_kuwo -> {
+                    changeColor(R.color.color_kuwo)
+                    site = MusicSite.KUWO
+                    search()
+                }
+
+                R.id.rb_migu -> {
+                    changeColor(R.color.color_migu)
+                    site = MusicSite.MIGU
                     search()
                 }
             }
         }
 
         listAdapter.setOnItemClickListener { viewGroup, view, i ->
+
             LogUtil.e("点击的结果", listAdapter.data[i].toString())
+
             Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].title}", Toast.LENGTH_SHORT).show()
-
-            val intent = Intent(this, PlayActivity::class.java)
-
-            intent.putExtra("data", listAdapter.data[i])
-
-            startActivity(intent)
 
         }
 
@@ -130,6 +131,16 @@ class SearchActivity : BaseActivity() {
     }
 
     /**
+     * 修改页面颜色
+     */
+    fun changeColor(@ColorRes colorRes: Int) {
+        toolbarLay.setBackgroundColor(resources.getColor(colorRes))
+        radioGroup.setBackgroundColor(resources.getColor(colorRes))
+        StatusBarUtil.setColor(this@SearchActivity, resources.getColor(colorRes), 0)
+    }
+
+
+    /**
      *搜索
      */
     @SuppressLint("CheckResult")
@@ -151,12 +162,4 @@ class SearchActivity : BaseActivity() {
                     }
                 }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (mPlayer?.isPlaying == true) {
-            mPlayer?.stop()
-        }
-    }
-
 }

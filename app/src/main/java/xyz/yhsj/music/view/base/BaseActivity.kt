@@ -65,4 +65,9 @@ abstract class BaseActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onPause() {
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+        super.onPause()
+    }
 }

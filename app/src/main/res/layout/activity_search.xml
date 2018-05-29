@@ -35,51 +35,110 @@
 
         </FrameLayout>
 
-
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:paddingTop="9dp"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@color/color_qq"
-            android:orientation="horizontal">
+            android:scrollbars="none">
 
-            <RadioButton
-                android:id="@+id/rb_qq"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:button="@null"
-                android:checked="true"
-                android:drawableTop="@drawable/select_music_qq" />
+            <RadioGroup
 
-            <RadioButton
-                android:id="@+id/rb_netease"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:button="@null"
-                android:drawableTop="@drawable/select_music_netease" />
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:background="@color/color_qq"
+                android:orientation="horizontal"
+                android:paddingTop="9dp">
 
-            <RadioButton
-                android:id="@+id/rb_xiami"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:button="@null"
-                android:drawableTop="@drawable/select_music_xiami" />
+                <RadioButton
+                    android:id="@+id/rb_qq"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:button="@null"
+                    android:checked="true"
+                    android:drawableTop="@drawable/select_music_qq" />
 
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/rb_netease"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:button="@null"
+                    android:drawableTop="@drawable/select_music_netease" />
+
+                <RadioButton
+                    android:id="@+id/rb_xiami"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:button="@null"
+                    android:drawableTop="@drawable/select_music_xiami" />
+
+                <RadioButton
+                    android:id="@+id/rb_baidu"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:button="@null"
+                    android:drawableTop="@drawable/select_music_baidu" />
+
+                <RadioButton
+                    android:id="@+id/rb_kugou"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:button="@null"
+                    android:drawableTop="@drawable/select_music_kugou" />
+
+                <RadioButton
+                    android:id="@+id/rb_kuwo"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:button="@null"
+                    android:drawableTop="@drawable/select_music_kuwo" />
+
+                <RadioButton
+                    android:id="@+id/rb_migu"
+                    android:layout_width="55dp"
+                    android:layout_height="match_parent"
+                    android:button="@null"
+                    android:drawableTop="@drawable/select_music_migu" />
+
+            </RadioGroup>
+        </HorizontalScrollView>
+
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/play_Layout">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/play_Layout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_alignParentBottom="true"
+            android:background="#4444">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="播放页面" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>
