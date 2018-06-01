@@ -1,31 +1,25 @@
 package xyz.yhsj.music.view.search
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.media.MediaPlayer
 import android.support.annotation.ColorRes
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.widget.Toast
 import com.jaeger.library.StatusBarUtil
+import com.lzx.musiclibrary.aidl.listener.OnPlayerEventListener
+import com.lzx.musiclibrary.aidl.model.SongInfo
 import kotlinx.android.synthetic.main.activity_search.*
 import xyz.yhsj.kmusic.impl.MusicImpl
 import xyz.yhsj.kmusic.site.MusicSite
-import xyz.yhsj.mediabrowser.client.MusicManager
 import xyz.yhsj.music.R
 import xyz.yhsj.music.utils.LogUtil
 import xyz.yhsj.music.utils.rxSearch
 import xyz.yhsj.music.view.base.BaseActivity
-import xyz.yhsj.music.view.play.PlayActivity
 import xyz.yhsj.music.view.search.adapter.SearchListAdapter
-import android.support.v4.media.MediaMetadataCompat
-import xyz.yhsj.mediabrowser.client.listener.OnSaveRecordListener
-import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
-import xyz.yhsj.music.entity.PlayMusicEntity
+import com.lzx.musiclibrary.manager.MusicManager
+import xyz.yhsj.music.utils.toSongInfo
 
 
 @SuppressLint("Registered")
@@ -41,10 +35,6 @@ class SearchActivity : BaseActivity() {
     lateinit var listAdapter: SearchListAdapter
 
     private var site = MusicSite.QQ
-
-    var mMusicManager: MusicManager? = null
-
-    private var mIsPlaying: Boolean = false
 
     override fun init() {
         supportActionBar!!.title = ""
@@ -62,50 +52,66 @@ class SearchActivity : BaseActivity() {
         //添加Android自带的分割线
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
-
-        if (mMusicManager == null) {
-            mMusicManager = MusicManager.getInstance()
-        }
-        mMusicManager?.init(this)
-
         initListener()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initListener() {
+        MusicManager.get().addPlayerEventListener(object : OnPlayerEventListener {
+            override fun onMusicSwitch(music: SongInfo) {
+                song_name.text = "${music.songName}-${music.artist}"
+                song_album.text = music.albumInfo.albumName
+            }
 
+            override fun onPlayerStart() {
+                action_play.text = "停"
+            }
+
+            override fun onPlayerPause() {
+                action_play.text = "播"
+            }
+
+            override fun onPlayCompletion() {
+                action_play.text = "播"
+            }
+
+            override fun onPlayerStop() {
+                action_play.text = "播"
+            }
+
+            override fun onError(errorMsg: String?) {
+
+                Toast.makeText(this@SearchActivity, "出错了：$errorMsg", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onAsyncLoading(isFinishLoading: Boolean) {
+            }
+
+        })
         action_play.setOnClickListener {
-            if (mIsPlaying) {
-                if (mMusicManager != null) {
-                    mMusicManager?.pause()
-                }
+            if (MusicManager.isPlaying()) {
+                MusicManager.get().pauseMusic()
             } else {
-                if (mMusicManager != null) {
-                    mMusicManager?.play()
-                }
+                MusicManager.get().resumeMusic()
             }
-        }
-
-
-        action_next.setOnClickListener {
-            if (mMusicManager != null) {
-                mMusicManager?.skipToNext()
-            }
-
         }
 
         action_previous.setOnClickListener {
-            if (mMusicManager != null) {
-                mMusicManager?.skipToPrevious()
-            }
+            if (MusicManager.get().hasPre()) {
+                MusicManager.get().playPre()
 
+            } else {
+                Toast.makeText(this, "没有上一首了", Toast.LENGTH_SHORT).show()
+            }
         }
 
-
-        // 音频变化的监听类
-        mMusicManager?.addOnAudioStatusListener(mAudioStatusChangeListener);
-        // 记录播放记录的监听
-        mMusicManager?.addOnRecorListener(mOnRecordListener);
-
+        action_next.setOnClickListener {
+            if (MusicManager.get().hasNext()) {
+                MusicManager.get().playNext()
+            } else {
+                Toast.makeText(this, "没有下一首了", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             listAdapter.clear()
@@ -157,13 +163,14 @@ class SearchActivity : BaseActivity() {
 
             Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].title}", Toast.LENGTH_SHORT).show()
 
+            song_name.text = "${listAdapter.data[i].title}-${listAdapter.data[i].author}"
+            song_album.text = listAdapter.data[i].albumName
+
             val musicList = listAdapter.data.map {
-                PlayMusicEntity(it)
+                it.toSongInfo()
             }
 
-            mMusicManager?.playMusicList(musicList, i)
-
-            mMusicManager?.play()
+            MusicManager.get().playMusic(musicList, i)
 
         }
 
@@ -222,103 +229,11 @@ class SearchActivity : BaseActivity() {
     }
 
 
-    private fun setControlBg(isPlaying: Boolean) {
+    private fun setControlStatus(isPlaying: Boolean) {
         if (isPlaying) {
             action_play.text = "停"
         } else {
             action_play.text = "播"
         }
     }
-
-
-    /**
-     * 音频变化回调
-     */
-    var mAudioStatusChangeListener: MusicManager.OnAudioStatusChangeListener = object : MusicManager.OnAudioStatusChangeListener {
-        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-            // 播放音频 状态变化
-            onMediaPlaybackStateChanged(state)
-        }
-
-        override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-            // 播放音频变化的回调
-            onMediaMetadataChanged(metadata)
-        }
-
-        override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) {
-            // TODO 播放队列发生变化
-        }
-    }
-
-    /**
-     * 记录播放位置的回调
-     */
-    var mOnRecordListener: OnSaveRecordListener = OnSaveRecordListener { mediaMetadataCompat, postion ->
-
-        LogUtil.e(mMsg = postion)
-
-        // TODO 保存播放记录用
-    }
-
-    /**
-     * 音频播放状态变化的回调
-     *
-     * @param playbackState
-     */
-    private fun onMediaPlaybackStateChanged(playbackState: PlaybackStateCompat?) {
-        if (playbackState == null) {
-            return
-        }
-        // 正在播放
-        mIsPlaying = playbackState.state == PlaybackStateCompat.STATE_PLAYING
-
-        // 更新UI
-        setControlBg(mIsPlaying)
-
-        /**
-         * 设置播放进度
-         */
-        val progress = playbackState.position.toInt()
-
-        println("播放进度: ${progress}   ${playbackState.playbackSpeed}")
-
-        when (playbackState.state) {
-            PlaybackStateCompat.STATE_PLAYING -> {
-                println("正在播放")
-            }
-            PlaybackStateCompat.STATE_PAUSED -> println("暂停播放")
-        }
-    }
-
-
-    /**
-     * 播放音频数据 发生变化的回调
-     *
-     * @param mediaMetadata
-     */
-    private fun onMediaMetadataChanged(mediaMetadata: MediaMetadataCompat?) {
-        if (mediaMetadata == null) {
-            return
-        }
-        // 音频的标题
-        val title = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE) + "-" +
-                // 音频作者
-                mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
-
-        song_name.text = title
-
-        // 音频专辑
-        song_album.text = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM)
-
-        // 音频图片
-        //        mAlbumArtImg.setImageBitmap(MusicLibrary.getAlbumBitmap(
-        //                MainActivity.this,
-        //                mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)));
-
-        // 进度条
-        val max = mediaMetadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION).toInt() ?: 0
-        println("这是个进度条：$max")
-    }
-
-
 }

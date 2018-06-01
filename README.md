@@ -1,14 +1,14 @@
 # Music
 纯音乐
 
-- 播放器来自,临时听个响,安卓8.0通知栏正常,(长时间播放会停止,有时间改)
-[Android_MediaBrowser_Demo](https://github.com/xiaxveliang/Android_MediaBrowser_Demo)
+- 播放器来自
+-[MusicLibrary](https://github.com/lizixian18/MusicLibrary)
 
 - http工具类，来自
-[khttp](https://github.com/jkcclemens/khttp)
+-[khttp](https://github.com/jkcclemens/khttp)
 
 - 音乐解析来自,项目中用到的是我改过的kotlin版本
-[music](https://github.com/maicong/music)
+-[music](https://github.com/maicong/music)
 
 # 支持网站
 - [x] 百度音乐
