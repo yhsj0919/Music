@@ -1,5 +1,6 @@
 package xyz.yhsj.music.utils
 
+import android.content.Context
 import com.lzx.musiclibrary.aidl.model.AlbumInfo
 import com.lzx.musiclibrary.aidl.model.SongInfo
 import com.lzx.musiclibrary.aidl.model.TempInfo
@@ -10,6 +11,8 @@ import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.Song
 import xyz.yhsj.kmusic.impl.MusicImpl
 import xyz.yhsj.kmusic.site.MusicSite
+import android.util.TypedValue
+
 
 fun MusicImpl.rxSearch(key: String, page: Int = 1, num: Int = 10, site: MusicSite = MusicSite.QQ) = Observable.create<MusicResp<List<Song>>> {
     it.onNext(this.search(key, page, num, site))
@@ -37,6 +40,12 @@ fun Song.toSongInfo(): SongInfo {
     songInfo.albumInfo = albumInfo
     val tempInfo = TempInfo()
     tempInfo.temp_1 = this.lrc
-
+    songInfo.tempInfo = tempInfo
     return songInfo
+}
+
+fun Context.sp2px(spVal: Float): Int {
+    val result = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP, spVal, this.resources.displayMetrics).toInt()
+    return result
 }

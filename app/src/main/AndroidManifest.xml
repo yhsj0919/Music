@@ -13,13 +13,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:theme="@style/AppTheme.NoActionBar"
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:allowBackup">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,10 +28,11 @@
         <activity
             android:name=".view.search.SearchActivity"
             android:label="@string/title_activity_search"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
 
-        <activity android:name=".view.play.PlayActivity" />
+        <activity
+            android:name=".view.play.PlayActivity"
+            android:label="" />
     </application>
 
 </manifest>

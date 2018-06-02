@@ -13,7 +13,7 @@ import xyz.yhsj.kmusic.entity.Song
 class SearchListAdapter(recyclerView: RecyclerView) : BaseRecyclerViewAdapter<Song>(recyclerView, R.layout.search_list_item) {
     override fun bindData(helper: ViewHolderHelper, index: Int, data: Song) {
         helper.setText(R.id.name, data.title)
-        helper.setText(R.id.singer, data.author + data.albumName.let { " - " + it })
+        helper.setText(R.id.singer, data.author + data.albumName.let { " - $it" })
 
     }
 }

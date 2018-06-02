@@ -1,33 +1,126 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".view.play.PlayActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/fm_run_song_bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/last"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="上一首" />
-
-    <Button
-        android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="播放" />
-
-    <Button
-        android:id="@+id/next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="下一首" />
-
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/seekBar"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        app:subtitleTextAppearance="@style/Toolbar.SubTitleText"
+        app:subtitleTextColor="#cecece"
+        android:minHeight="?attr/actionBarSize">
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <me.wcy.lrcview.LrcView
+            android:id="@+id/lrcView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lrcAnimationDuration="1000"
+            app:lrcCurrentTextColor="#e9ff42"
+            app:lrcDividerHeight="24dp"
+            app:lrcLabel="找不到歌词(@_@)"
+            app:lrcNormalTextColor="#BDBDBD"
+            app:lrcPadding="40dp"
+            app:lrcTextSize="16sp"
+            app:lrcTimeTextColor="#BDBDBD"
+            app:lrcTimelineColor="#80BDBDBD"
+            app:lrcTimelineTextColor="#9FA8DA" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingTop="5dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            android:id="@+id/tv_play_time"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:text="00:00"
+            android:textColor="@android:color/white" />
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            style="@style/Widget.SeekBar.Normal"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:max="1000" />
+
+        <TextView
+            android:id="@+id/tv_song_time"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:text="00:00"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
 
+        <ImageView
+            android:id="@+id/btn_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:clickable="true"
+            android:src="@drawable/play_btn_play_selector" />
+
+        <ImageView
+            android:id="@+id/btn_prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/btn_play"
+            android:clickable="true"
+            android:src="@drawable/play_btn_prev_selector" />
+
+        <ImageView
+            android:id="@+id/btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/btn_play"
+            android:clickable="true"
+            android:src="@drawable/play_btn_next_selector" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/btn_prev"
+            android:src="@mipmap/play_icn_loop" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/btn_next"
+            android:src="@mipmap/play_icn_src" />
+    </RelativeLayout>
 </LinearLayout>
