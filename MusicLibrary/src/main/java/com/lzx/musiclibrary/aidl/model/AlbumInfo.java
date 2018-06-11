@@ -136,7 +136,7 @@ public class AlbumInfo implements Parcelable {
         this.playCount = in.readInt();
     }
 
-    public static final Parcelable.Creator<AlbumInfo> CREATOR = new Parcelable.Creator<AlbumInfo>() {
+    public static final Creator<AlbumInfo> CREATOR = new Creator<AlbumInfo>() {
         @Override
         public AlbumInfo createFromParcel(Parcel source) {
             return new AlbumInfo(source);

@@ -16,7 +16,7 @@ public interface IPlayControl extends android.os.IInterface {
      * Local-side IPC implementation stub class.
      */
     public static abstract class Stub extends android.os.Binder implements IPlayControl {
-        private static final java.lang.String DESCRIPTOR = "IPlayControl";
+        private static final String DESCRIPTOR = "IPlayControl";
 
         /**
          * Construct the stub at attach it to the interface.
@@ -39,7 +39,7 @@ public interface IPlayControl extends android.os.IInterface {
             if (((iin != null) && (iin instanceof IPlayControl))) {
                 return ((IPlayControl) iin);
             }
-            return new IPlayControl.Stub.Proxy(obj);
+            return new Proxy(obj);
         }
 
         @Override
@@ -48,7 +48,7 @@ public interface IPlayControl extends android.os.IInterface {
         }
 
         @Override
-        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException {
+        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws RemoteException {
             switch (code) {
                 case INTERFACE_TRANSACTION: {
                     reply.writeString(DESCRIPTOR);
@@ -357,7 +357,7 @@ public interface IPlayControl extends android.os.IInterface {
                     } else {
                         _arg0 = null;
                     }
-                    java.lang.String _arg1;
+                    String _arg1;
                     _arg1 = data.readString();
                     this.updateNotificationContentIntent(_arg0, _arg1);
                     reply.writeNoException();
@@ -418,7 +418,7 @@ public interface IPlayControl extends android.os.IInterface {
                 return mRemote;
             }
 
-            public java.lang.String getInterfaceDescriptor() {
+            public String getInterfaceDescriptor() {
                 return DESCRIPTOR;
             }
 
@@ -429,7 +429,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param isJustPlay
              */
             @Override
-            public void playMusic(List<SongInfo> list, int index, boolean isJustPlay) throws android.os.RemoteException {
+            public void playMusic(List<SongInfo> list, int index, boolean isJustPlay) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -451,7 +451,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param isJustPlay
              */
             @Override
-            public void playMusicByInfo(SongInfo info, boolean isJustPlay) throws android.os.RemoteException {
+            public void playMusicByInfo(SongInfo info, boolean isJustPlay) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -477,7 +477,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param isJustPlay
              */
             @Override
-            public void playMusicByIndex(int index, boolean isJustPlay) throws android.os.RemoteException {
+            public void playMusicByIndex(int index, boolean isJustPlay) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -497,7 +497,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param time
              */
             @Override
-            public void pausePlayInMillis(long time) throws android.os.RemoteException {
+            public void pausePlayInMillis(long time) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -516,7 +516,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return index
              */
             @Override
-            public int getCurrPlayingIndex() throws android.os.RemoteException {
+            public int getCurrPlayingIndex() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 int _result;
@@ -536,7 +536,7 @@ public interface IPlayControl extends android.os.IInterface {
              * 暂停
              */
             @Override
-            public void pauseMusic() throws android.os.RemoteException {
+            public void pauseMusic() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -553,7 +553,7 @@ public interface IPlayControl extends android.os.IInterface {
              * 继续
              */
             @Override
-            public void resumeMusic() throws android.os.RemoteException {
+            public void resumeMusic() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -570,7 +570,7 @@ public interface IPlayControl extends android.os.IInterface {
              * 停止音乐
              */
             @Override
-            public void stopMusic() throws android.os.RemoteException {
+            public void stopMusic() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -588,7 +588,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param list
              */
             @Override
-            public void setPlayList(List<SongInfo> list) throws android.os.RemoteException {
+            public void setPlayList(List<SongInfo> list) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -608,7 +608,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param index
              */
             @Override
-            public void setPlayListWithIndex(List<SongInfo> list, int index) throws android.os.RemoteException {
+            public void setPlayListWithIndex(List<SongInfo> list, int index) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -628,7 +628,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return list
              */
             @Override
-            public List<SongInfo> getPlayList() throws android.os.RemoteException {
+            public List<SongInfo> getPlayList() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 List<SongInfo> _result;
@@ -650,7 +650,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param isNeedToPlayNext
              */
             @Override
-            public void deleteSongInfoOnPlayList(SongInfo info, boolean isNeedToPlayNext) throws android.os.RemoteException {
+            public void deleteSongInfoOnPlayList(SongInfo info, boolean isNeedToPlayNext) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -675,7 +675,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return int
              */
             @Override
-            public int getStatus() throws android.os.RemoteException {
+            public int getStatus() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 int _result;
@@ -716,7 +716,7 @@ public interface IPlayControl extends android.os.IInterface {
              * 播放下一首
              */
             @Override
-            public void playNext() throws android.os.RemoteException {
+            public void playNext() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -733,7 +733,7 @@ public interface IPlayControl extends android.os.IInterface {
              * 播放上一首
              */
             @Override
-            public void playPre() throws android.os.RemoteException {
+            public void playPre() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -751,7 +751,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return boolean
              */
             @Override
-            public boolean hasPre() throws android.os.RemoteException {
+            public boolean hasPre() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 boolean _result;
@@ -772,7 +772,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return boolean
              */
             @Override
-            public boolean hasNext() throws android.os.RemoteException {
+            public boolean hasNext() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 boolean _result;
@@ -793,7 +793,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return info
              */
             @Override
-            public SongInfo getPreMusic() throws android.os.RemoteException {
+            public SongInfo getPreMusic() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 SongInfo _result;
@@ -818,7 +818,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return info
              */
             @Override
-            public SongInfo getNextMusic() throws android.os.RemoteException {
+            public SongInfo getNextMusic() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 SongInfo _result;
@@ -843,7 +843,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return info
              */
             @Override
-            public SongInfo getCurrPlayingMusic() throws android.os.RemoteException {
+            public SongInfo getCurrPlayingMusic() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 SongInfo _result;
@@ -868,7 +868,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param index
              */
             @Override
-            public void setCurrMusic(int index) throws android.os.RemoteException {
+            public void setCurrMusic(int index) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -887,7 +887,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param mode
              */
             @Override
-            public void setPlayMode(int mode) throws android.os.RemoteException {
+            public void setPlayMode(int mode) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -906,7 +906,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return int
              */
             @Override
-            public int getPlayMode() throws android.os.RemoteException {
+            public int getPlayMode() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 int _result;
@@ -927,7 +927,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @return long
              */
             @Override
-            public long getProgress() throws android.os.RemoteException {
+            public long getProgress() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 long _result;
@@ -948,7 +948,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param position
              */
             @Override
-            public void seekTo(int position) throws android.os.RemoteException {
+            public void seekTo(int position) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -966,7 +966,7 @@ public interface IPlayControl extends android.os.IInterface {
              * 初始化
              */
             @Override
-            public void reset() throws android.os.RemoteException {
+            public void reset() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -1077,7 +1077,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param creater
              */
             @Override
-            public void updateNotificationCreater(NotificationCreater creater) throws android.os.RemoteException {
+            public void updateNotificationCreater(NotificationCreater creater) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -1101,7 +1101,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param isFavorite
              */
             @Override
-            public void updateNotificationFavorite(boolean isFavorite) throws android.os.RemoteException {
+            public void updateNotificationFavorite(boolean isFavorite) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -1120,7 +1120,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param isChecked
              */
             @Override
-            public void updateNotificationLyrics(boolean isChecked) throws android.os.RemoteException {
+            public void updateNotificationLyrics(boolean isChecked) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -1140,7 +1140,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param targetClass
              */
             @Override
-            public void updateNotificationContentIntent(android.os.Bundle bundle, java.lang.String targetClass) throws android.os.RemoteException {
+            public void updateNotificationContentIntent(android.os.Bundle bundle, String targetClass) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -1165,7 +1165,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param listener
              */
             @Override
-            public void registerPlayerEventListener(IOnPlayerEventListener listener) throws android.os.RemoteException {
+            public void registerPlayerEventListener(IOnPlayerEventListener listener) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -1184,7 +1184,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param listener
              */
             @Override
-            public void unregisterPlayerEventListener(IOnPlayerEventListener listener) throws android.os.RemoteException {
+            public void unregisterPlayerEventListener(IOnPlayerEventListener listener) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -1203,7 +1203,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param listener
              */
             @Override
-            public void registerTimerTaskListener(IOnTimerTaskListener listener) throws android.os.RemoteException {
+            public void registerTimerTaskListener(IOnTimerTaskListener listener) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -1222,7 +1222,7 @@ public interface IPlayControl extends android.os.IInterface {
              * @param listener
              */
             @Override
-            public void unregisterTimerTaskListener(IOnTimerTaskListener listener) throws android.os.RemoteException {
+            public void unregisterTimerTaskListener(IOnTimerTaskListener listener) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -1298,86 +1298,86 @@ public interface IPlayControl extends android.os.IInterface {
     }
 
     //播放，并设置播放列表
-    void playMusic(List<SongInfo> list, int index, boolean isJustPlay) throws android.os.RemoteException;
+    void playMusic(List<SongInfo> list, int index, boolean isJustPlay) throws RemoteException;
 
     //根据音乐信息播放
-    void playMusicByInfo(SongInfo info, boolean isJustPlay) throws android.os.RemoteException;
+    void playMusicByInfo(SongInfo info, boolean isJustPlay) throws RemoteException;
 
     //根据索引播放
-    void playMusicByIndex(int index, boolean isJustPlay) throws android.os.RemoteException;
+    void playMusicByIndex(int index, boolean isJustPlay) throws RemoteException;
 
     //设置定时时间
-    void pausePlayInMillis(long time) throws android.os.RemoteException;
+    void pausePlayInMillis(long time) throws RemoteException;
 
-    int getCurrPlayingIndex() throws android.os.RemoteException;
+    int getCurrPlayingIndex() throws RemoteException;
 
     //暂停
-    void pauseMusic() throws android.os.RemoteException;
+    void pauseMusic() throws RemoteException;
 
     //继续
-    void resumeMusic() throws android.os.RemoteException;
+    void resumeMusic() throws RemoteException;
 
     //停止音乐
-    void stopMusic() throws android.os.RemoteException;
+    void stopMusic() throws RemoteException;
 
     //设置播放列表
-    void setPlayList(List<SongInfo> list) throws android.os.RemoteException;
+    void setPlayList(List<SongInfo> list) throws RemoteException;
 
     //设置播放列表
-    void setPlayListWithIndex(List<SongInfo> list, int index) throws android.os.RemoteException;
+    void setPlayListWithIndex(List<SongInfo> list, int index) throws RemoteException;
 
     //得到播放列表
-    List<SongInfo> getPlayList() throws android.os.RemoteException;
+    List<SongInfo> getPlayList() throws RemoteException;
 
     //从播放列表中删除一条信息
-    void deleteSongInfoOnPlayList(SongInfo info, boolean isNeedToPlayNext) throws android.os.RemoteException;
+    void deleteSongInfoOnPlayList(SongInfo info, boolean isNeedToPlayNext) throws RemoteException;
 
     //获取播放状态
-    int getStatus() throws android.os.RemoteException;
+    int getStatus() throws RemoteException;
 
     //获取音乐时长
-    int getDuration() throws android.os.RemoteException;
+    int getDuration() throws RemoteException;
 
     //播放下一首
-    void playNext() throws android.os.RemoteException;
+    void playNext() throws RemoteException;
 
     //播放上一首
-    void playPre() throws android.os.RemoteException;
+    void playPre() throws RemoteException;
 
     //是否有上一首
-    boolean hasPre() throws android.os.RemoteException;
+    boolean hasPre() throws RemoteException;
 
     //是否有下一首
-    boolean hasNext() throws android.os.RemoteException;
+    boolean hasNext() throws RemoteException;
 
     //得到上一首信息
-    SongInfo getPreMusic() throws android.os.RemoteException;
+    SongInfo getPreMusic() throws RemoteException;
 
     //得到下一首信息
-    SongInfo getNextMusic() throws android.os.RemoteException;
+    SongInfo getNextMusic() throws RemoteException;
 
     //得到当前播放信息
-    SongInfo getCurrPlayingMusic() throws android.os.RemoteException;
+    SongInfo getCurrPlayingMusic() throws RemoteException;
 
     //设置当前音乐信息
-    void setCurrMusic(int index) throws android.os.RemoteException;
+    void setCurrMusic(int index) throws RemoteException;
 
     //设置播放模式
-    void setPlayMode(int mode) throws android.os.RemoteException;
+    void setPlayMode(int mode) throws RemoteException;
 
-    int getPlayMode() throws android.os.RemoteException;
+    int getPlayMode() throws RemoteException;
 
     //获取当前进度
-    long getProgress() throws android.os.RemoteException;
+    long getProgress() throws RemoteException;
 
     //定位到指定位置
-    void seekTo(int position) throws android.os.RemoteException;
+    void seekTo(int position) throws RemoteException;
 
     //初始化
-    void reset() throws android.os.RemoteException;
+    void reset() throws RemoteException;
 
     //是否开启边播边存
-    void openCacheWhenPlaying(boolean isOpen) throws android.os.RemoteException;
+    void openCacheWhenPlaying(boolean isOpen) throws RemoteException;
 
     //关闭通知栏
     void stopNotification() throws RemoteException;
@@ -1392,29 +1392,29 @@ public interface IPlayControl extends android.os.IInterface {
     void setVolume(float audioVolume) throws RemoteException;
 
     //更新通知栏
-    void updateNotificationCreater(NotificationCreater creater) throws android.os.RemoteException;
+    void updateNotificationCreater(NotificationCreater creater) throws RemoteException;
 
     //更新通知栏喜欢/收藏按钮选中状态
-    void updateNotificationFavorite(boolean isFavorite) throws android.os.RemoteException;
+    void updateNotificationFavorite(boolean isFavorite) throws RemoteException;
 
     //更新通知栏桌面歌词按钮选中状态
-    void updateNotificationLyrics(boolean isChecked) throws android.os.RemoteException;
+    void updateNotificationLyrics(boolean isChecked) throws RemoteException;
 
     //更新通知栏ContentIntent
-    void updateNotificationContentIntent(android.os.Bundle bundle, String targetClass) throws android.os.RemoteException;
+    void updateNotificationContentIntent(android.os.Bundle bundle, String targetClass) throws RemoteException;
 
     //注册一个播放状态监听器
-    void registerPlayerEventListener(IOnPlayerEventListener listener) throws android.os.RemoteException;
+    void registerPlayerEventListener(IOnPlayerEventListener listener) throws RemoteException;
 
     //解注册一个播放状态监听器
-    void unregisterPlayerEventListener(IOnPlayerEventListener listener) throws android.os.RemoteException;
+    void unregisterPlayerEventListener(IOnPlayerEventListener listener) throws RemoteException;
 
     //注册一个定时播放监听器
-    void registerTimerTaskListener(IOnTimerTaskListener listener) throws android.os.RemoteException;
+    void registerTimerTaskListener(IOnTimerTaskListener listener) throws RemoteException;
 
     //解注册一个定时播放监听器
-    void unregisterTimerTaskListener(IOnTimerTaskListener listener) throws android.os.RemoteException;
+    void unregisterTimerTaskListener(IOnTimerTaskListener listener) throws RemoteException;
 
     //获取音频SessionId
-    int getAudioSessionId() throws android.os.RemoteException;
+    int getAudioSessionId() throws RemoteException;
 }

@@ -10,7 +10,7 @@ public interface IOnTimerTaskListener extends android.os.IInterface {
      * Local-side IPC implementation stub class.
      */
     public static abstract class Stub extends android.os.Binder implements IOnTimerTaskListener {
-        private static final java.lang.String DESCRIPTOR = "IOnTimerTaskListener";
+        private static final String DESCRIPTOR = "IOnTimerTaskListener";
 
         /**
          * Construct the stub at attach it to the interface.
@@ -33,7 +33,7 @@ public interface IOnTimerTaskListener extends android.os.IInterface {
             if (((iin != null) && (iin instanceof IOnTimerTaskListener))) {
                 return ((IOnTimerTaskListener) iin);
             }
-            return new IOnTimerTaskListener.Stub.Proxy(obj);
+            return new Proxy(obj);
         }
 
         @Override
@@ -70,7 +70,7 @@ public interface IOnTimerTaskListener extends android.os.IInterface {
                 return mRemote;
             }
 
-            public java.lang.String getInterfaceDescriptor() {
+            public String getInterfaceDescriptor() {
                 return DESCRIPTOR;
             }
 

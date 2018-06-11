@@ -126,7 +126,7 @@ public class TempInfo implements Parcelable {
         this.temp_9 = in.readString();
     }
 
-    public static final Parcelable.Creator<TempInfo> CREATOR = new Parcelable.Creator<TempInfo>() {
+    public static final Creator<TempInfo> CREATOR = new Creator<TempInfo>() {
         @Override
         public TempInfo createFromParcel(Parcel source) {
             return new TempInfo(source);

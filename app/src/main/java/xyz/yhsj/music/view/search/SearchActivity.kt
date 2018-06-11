@@ -156,9 +156,8 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
 
         play_Layout.setOnClickListener {
             CircularAnim.fullActivity(this@SearchActivity, play_Layout)
-                    .colorOrImageRes(R.color.color_qq)  //注释掉，因为该颜色已经在App.class 里配置为默认色
+                    .colorOrImageRes(R.color.colorPrimary)  //注释掉，因为该颜色已经在App.class 里配置为默认色
                     .deployReturnAnimator { animator ->
-                        //this .setDuration() with override CircularAnim.setDuration().
                         animator.interpolator = AccelerateInterpolator()
                     }
                     .go {

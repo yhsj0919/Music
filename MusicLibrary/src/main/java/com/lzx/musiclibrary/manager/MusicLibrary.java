@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 
@@ -121,6 +122,11 @@ public class MusicLibrary {
         intent.putExtra("cacheConfig", mCacheConfig);
         if (isStartService) {
             mContext.startService(intent);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                mContext.startForegroundService(intent);
+//            }else {
+//                mContext.startService(intent);
+//            }
         }
         mContext.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }

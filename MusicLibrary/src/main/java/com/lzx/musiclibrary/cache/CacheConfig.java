@@ -21,7 +21,7 @@ public class CacheConfig implements Parcelable {
         this.maxCacheFilesCount = builder.maxCacheFilesCount;
     }
 
-    public static CacheConfig DEFAULT = new CacheConfig.Builder()
+    public static CacheConfig DEFAULT = new Builder()
             .setCachePath("/musicLibrary/song-cache/")
             .setMaxCacheFilesCount(512 * 1024 * 1024)
             .setMaxCacheSize(1024 * 1024 * 1024)
@@ -95,7 +95,7 @@ public class CacheConfig implements Parcelable {
         this.maxCacheFilesCount = in.readInt();
     }
 
-    public static final Parcelable.Creator<CacheConfig> CREATOR = new Parcelable.Creator<CacheConfig>() {
+    public static final Creator<CacheConfig> CREATOR = new Creator<CacheConfig>() {
         @Override
         public CacheConfig createFromParcel(Parcel source) {
             return new CacheConfig(source);

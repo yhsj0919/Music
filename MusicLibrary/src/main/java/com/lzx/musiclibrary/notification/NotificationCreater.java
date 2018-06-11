@@ -243,7 +243,7 @@ public class NotificationCreater implements Parcelable {
         this.downloadIntent = in.readParcelable(PendingIntent.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<NotificationCreater> CREATOR = new Parcelable.Creator<NotificationCreater>() {
+    public static final Creator<NotificationCreater> CREATOR = new Creator<NotificationCreater>() {
         @Override
         public NotificationCreater createFromParcel(Parcel source) {
             return new NotificationCreater(source);

@@ -13,7 +13,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
      * Local-side IPC implementation stub class.
      */
     public static abstract class Stub extends android.os.Binder implements IOnPlayerEventListener {
-        private static final java.lang.String DESCRIPTOR = "IOnPlayerEventListener";
+        private static final String DESCRIPTOR = "IOnPlayerEventListener";
 
         /**
          * Construct the stub at attach it to the interface.
@@ -36,7 +36,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
             if (((iin != null) && (iin instanceof IOnPlayerEventListener))) {
                 return ((IOnPlayerEventListener) iin);
             }
-            return new IOnPlayerEventListener.Stub.Proxy(obj);
+            return new Proxy(obj);
         }
 
         @Override
@@ -45,7 +45,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
         }
 
         @Override
-        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException {
+        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws RemoteException {
             switch (code) {
                 case INTERFACE_TRANSACTION: {
                     reply.writeString(DESCRIPTOR);
@@ -97,7 +97,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
                 }
                 case TRANSACTION_onError: {
                     data.enforceInterface(DESCRIPTOR);
-                    java.lang.String _arg0;
+                    String _arg0;
                     _arg0 = data.readString();
                     this.onError(_arg0);
                     reply.writeNoException();
@@ -119,7 +119,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
                 return mRemote;
             }
 
-            public java.lang.String getInterfaceDescriptor() {
+            public String getInterfaceDescriptor() {
                 return DESCRIPTOR;
             }
 
@@ -127,7 +127,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
              * 切换歌曲
              */
             @Override
-            public void onMusicSwitch(SongInfo music) throws android.os.RemoteException {
+            public void onMusicSwitch(SongInfo music) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -150,7 +150,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
              * 继续播放
              */
             @Override
-            public void onPlayerStart() throws android.os.RemoteException {
+            public void onPlayerStart() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -167,7 +167,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
              * 暂停播放
              */
             @Override
-            public void onPlayerPause() throws android.os.RemoteException {
+            public void onPlayerPause() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -181,7 +181,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
             }
 
             @Override
-            public void onAsyncLoading(boolean isFinishLoading) throws android.os.RemoteException {
+            public void onAsyncLoading(boolean isFinishLoading) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -199,7 +199,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
              * 播放完成
              */
             @Override
-            public void onPlayCompletion() throws android.os.RemoteException {
+            public void onPlayCompletion() throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -227,7 +227,7 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
             }
 
             @Override
-            public void onError(java.lang.String errorMsg) throws android.os.RemoteException {
+            public void onError(String errorMsg) throws RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
@@ -254,31 +254,31 @@ public interface IOnPlayerEventListener extends android.os.IInterface {
     /**
      * 切换歌曲
      * @param music
-     * @throws android.os.RemoteException
+     * @throws RemoteException
      */
-    void onMusicSwitch(SongInfo music) throws android.os.RemoteException;
+    void onMusicSwitch(SongInfo music) throws RemoteException;
 
     /**
      * 继续播放
-     * @throws android.os.RemoteException
+     * @throws RemoteException
      */
-    void onPlayerStart() throws android.os.RemoteException;
+    void onPlayerStart() throws RemoteException;
 
     /**
      * 暂停播放
-     * @throws android.os.RemoteException
+     * @throws RemoteException
      */
-    void onPlayerPause() throws android.os.RemoteException;
+    void onPlayerPause() throws RemoteException;
 
-    void onAsyncLoading(boolean isFinishLoading) throws android.os.RemoteException;
+    void onAsyncLoading(boolean isFinishLoading) throws RemoteException;
 
     /**
      * 播放完成
-     * @throws android.os.RemoteException
+     * @throws RemoteException
      */
-    void onPlayCompletion() throws android.os.RemoteException;
+    void onPlayCompletion() throws RemoteException;
 
-    void onPlayerStop() throws android.os.RemoteException;
+    void onPlayerStop() throws RemoteException;
 
-    void onError(java.lang.String errorMsg) throws android.os.RemoteException;
+    void onError(String errorMsg) throws RemoteException;
 }

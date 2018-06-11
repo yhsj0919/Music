@@ -32,7 +32,7 @@ class PlayActivity : BaseActivity(), OnPlayerEventListener {
         supportActionBar?.title = music?.songName ?: ""
         supportActionBar?.subtitle = music?.artist ?: ""
 
-        lrcView.loadLrc(music?.tempInfo?.temp_1)
+        lrcView.loadLrc(music?.tempInfo?.temp_1?.replace("<[0-9]*>".toRegex(), ""))
 
         if (MusicManager.isPlaying()) {
             mTimerTaskManager.scheduleSeekBarUpdate()
@@ -93,7 +93,7 @@ class PlayActivity : BaseActivity(), OnPlayerEventListener {
         supportActionBar?.title = music.songName ?: ""
         supportActionBar?.subtitle = music.artist ?: ""
 
-        lrcView.loadLrc(music.tempInfo?.temp_1)
+        lrcView.loadLrc((music.tempInfo?.temp_1?.replace("<[0-9]*>".toRegex(), "")))
     }
 
     override fun onPlayerStart() {

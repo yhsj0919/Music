@@ -347,7 +347,7 @@ public class SongInfo implements Parcelable {
 
     }
 
-    public static final Parcelable.Creator<SongInfo> CREATOR = new Parcelable.Creator<SongInfo>() {
+    public static final Creator<SongInfo> CREATOR = new Creator<SongInfo>() {
         @Override
         public SongInfo createFromParcel(Parcel source) {
             return new SongInfo(source);

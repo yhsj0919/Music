@@ -12,7 +12,6 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
     }
@@ -51,6 +50,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.13'
     implementation 'com.sunfusheng:glideimageview:1.2.0'
     //歌词
-    implementation 'me.wcy:lrcview:2.0.1'
+//    implementation 'me.wcy:lrcview:2.0.1'
     implementation project(':MusicLibrary')
+    implementation project(':LrcView')
 }
