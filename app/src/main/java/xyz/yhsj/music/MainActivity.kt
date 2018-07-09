@@ -1,18 +1,14 @@
 package xyz.yhsj.music
 
 import android.content.Intent
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.animation.AccelerateInterpolator
 import kotlinx.android.synthetic.main.activity_main.*
 import top.wefor.circularanim.CircularAnim
-import xyz.yhsj.kmusic.impl.MusicImpl
-import xyz.yhsj.music.utils.LogUtil
 import xyz.yhsj.music.view.base.BaseActivity
 import xyz.yhsj.music.view.play.PlayActivity
 import xyz.yhsj.music.view.search.SearchActivity
-import kotlin.concurrent.thread
 
 class MainActivity : BaseActivity() {
     override val layoutId: Int = R.layout.activity_main

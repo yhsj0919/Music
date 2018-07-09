@@ -4,17 +4,19 @@ import android.content.Context
 import com.lzx.musiclibrary.aidl.model.AlbumInfo
 import com.lzx.musiclibrary.aidl.model.SongInfo
 import com.lzx.musiclibrary.aidl.model.TempInfo
+
+import xyz.yhsj.kmusic.entity.MusicResp
+import xyz.yhsj.kmusic.entity.Song
+
+import xyz.yhsj.kmusic.site.MusicSite
+import android.util.TypedValue
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import xyz.yhsj.kmusic.entity.MusicResp
-import xyz.yhsj.kmusic.entity.Song
-import xyz.yhsj.kmusic.impl.MusicImpl
-import xyz.yhsj.kmusic.site.MusicSite
-import android.util.TypedValue
+import xyz.yhsj.kmusic.KMusic
 
 
-fun MusicImpl.rxSearch(key: String, page: Int = 1, num: Int = 10, site: MusicSite = MusicSite.QQ) = Observable.create<MusicResp<List<Song>>> {
+fun KMusic.rxSearch(key: String, page: Int = 1, num: Int = 10, site: MusicSite = MusicSite.QQ) = Observable.create<MusicResp<List<Song>>> {
     it.onNext(this.search(key, page, num, site))
     it.onComplete()
 }
@@ -31,7 +33,7 @@ fun Song.toSongInfo(): SongInfo {
     songInfo.songName = this.title
     songInfo.songCover = this.pic
     songInfo.songUrl = this.url
-    songInfo.type = this.type
+    songInfo.type = this.site
     songInfo.artist = this.author
     songInfo.downloadUrl = this.url
     songInfo.site = this.link

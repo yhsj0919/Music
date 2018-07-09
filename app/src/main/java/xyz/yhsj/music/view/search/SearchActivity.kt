@@ -12,19 +12,19 @@ import android.widget.Toast
 import com.jaeger.library.StatusBarUtil
 import com.lzx.musiclibrary.aidl.listener.OnPlayerEventListener
 import com.lzx.musiclibrary.aidl.model.SongInfo
+import com.lzx.musiclibrary.manager.MusicManager
+import com.sunfusheng.glideimageview.GlideImageLoader
 import kotlinx.android.synthetic.main.activity_search.*
-import xyz.yhsj.kmusic.impl.MusicImpl
+import top.wefor.circularanim.CircularAnim
+import xyz.yhsj.kmusic.KMusic
 import xyz.yhsj.kmusic.site.MusicSite
 import xyz.yhsj.music.R
 import xyz.yhsj.music.utils.LogUtil
 import xyz.yhsj.music.utils.rxSearch
-import xyz.yhsj.music.view.base.BaseActivity
-import xyz.yhsj.music.view.search.adapter.SearchListAdapter
-import com.lzx.musiclibrary.manager.MusicManager
-import com.sunfusheng.glideimageview.GlideImageLoader
-import top.wefor.circularanim.CircularAnim
 import xyz.yhsj.music.utils.toSongInfo
+import xyz.yhsj.music.view.base.BaseActivity
 import xyz.yhsj.music.view.play.PlayActivity
+import xyz.yhsj.music.view.search.adapter.SearchListAdapter
 
 
 @SuppressLint("Registered")
@@ -219,7 +219,7 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
         }
         swipeRefreshLayout.isRefreshing = true
 
-        MusicImpl.rxSearch(key = key!!, site = site)
+        KMusic.rxSearch(key = key!!, site = site)
                 .subscribe {
                     swipeRefreshLayout.isRefreshing = false
                     if (it.code == 200) {
