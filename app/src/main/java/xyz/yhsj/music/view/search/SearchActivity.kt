@@ -80,7 +80,7 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
             }
         }
 
-        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
             listAdapter.clear()
 
             when (checkedId) {
@@ -124,7 +124,7 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
             }
         }
 
-        listAdapter.setOnItemClickListener { viewGroup, view, i ->
+        listAdapter.setOnItemClickListener { _, _, i ->
             LogUtil.e("点击的结果", listAdapter.data[i].toString())
             Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].title}", Toast.LENGTH_SHORT).show()
             song_name.text = "${listAdapter.data[i].title}-${listAdapter.data[i].author}"

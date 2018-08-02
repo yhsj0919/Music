@@ -1,8 +1,6 @@
 package com.lzx.musiclibrary.manager;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +11,6 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 
 import com.danikula.videocache.ProxyCacheUtils;
-import com.lzx.musiclibrary.MusicService;
 import com.lzx.musiclibrary.aidl.listener.OnPlayerEventListener;
 import com.lzx.musiclibrary.aidl.listener.OnTimerTaskListener;
 import com.lzx.musiclibrary.aidl.model.SongInfo;
@@ -48,7 +45,8 @@ public class MusicManager implements IPlayControl {
     public static final int MSG_PLAYER_ERROR = 4;
     public static final int MSG_BUFFERING = 5;
     public static final int MSG_TIMER_FINISH = 6;
-    public static final int MSG_PLAYER_STOP = 7;
+    public static final int MSG_TIMER_TICK = 7;
+    public static final int MSG_PLAYER_STOP = 8;
 
     private Context mContext;
     private boolean isOpenCacheWhenPlaying = false;
@@ -112,6 +110,7 @@ public class MusicManager implements IPlayControl {
             e.printStackTrace();
         }
         mContext.unbindService(mServiceConnection);
+        MusicLibrary.isInitLibrary = false;
     }
 
     public void addStateObservable(Observer o) {
@@ -164,7 +163,7 @@ public class MusicManager implements IPlayControl {
         }
 
         @Override
-        public void onAsyncLoading(boolean isFinishLoading) throws RemoteException {
+        public void onAsyncLoading(boolean isFinishLoading) {
             mClientHandler.obtainMessage(MSG_BUFFERING, isFinishLoading).sendToTarget();
         }
     };
@@ -173,6 +172,17 @@ public class MusicManager implements IPlayControl {
         @Override
         public void onTimerFinish() {
             mClientHandler.obtainMessage(MSG_TIMER_FINISH).sendToTarget();
+        }
+
+        @Override
+        public void onTimerTick(long millisUntilFinished, long totalTime) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("millisUntilFinished", millisUntilFinished);
+            bundle.putLong("totalTime", totalTime);
+            Message message = Message.obtain();
+            message.setData(bundle);
+            message.what = MSG_TIMER_TICK;
+            mClientHandler.sendMessage(message);
         }
     };
 
@@ -216,7 +226,13 @@ public class MusicManager implements IPlayControl {
                     manager.mStateObservable.stateChangeNotifyObservers(MSG_BUFFERING);
                     break;
                 case MSG_TIMER_FINISH:
-                    manager.notifyTimerTaskEventChange(MSG_TIMER_FINISH);
+                    manager.notifyTimerTaskEventChange(MSG_TIMER_FINISH, -1, -1);
+                    break;
+                case MSG_TIMER_TICK:
+                    Bundle bundle = msg.getData();
+                    long millisUntilFinished = bundle.getLong("millisUntilFinished");
+                    long totalTime = bundle.getLong("totalTime");
+                    manager.notifyTimerTaskEventChange(MSG_TIMER_TICK, millisUntilFinished, totalTime);
                     break;
                 case MSG_PLAYER_STOP:
                     manager.notifyPlayerEventChange(MSG_PLAYER_STOP, null, null, false);
@@ -297,10 +313,12 @@ public class MusicManager implements IPlayControl {
         }
     }
 
-    private void notifyTimerTaskEventChange(int msg) {
+    private void notifyTimerTaskEventChange(int msg, long millisUntilFinished, long totalTime) {
         for (OnTimerTaskListener listener : mOnTimerTaskListeners) {
             if (msg == MSG_TIMER_FINISH) {
                 listener.onTimerFinish();
+            } else if (msg == MSG_TIMER_TICK) {
+                listener.onTimerTick(millisUntilFinished, totalTime);
             }
         }
     }
@@ -653,7 +671,7 @@ public class MusicManager implements IPlayControl {
     }
 
     @Override
-    public void setPlaybackParameters(float speed, float pitch) throws RemoteException {
+    public void setPlaybackParameters(float speed, float pitch) {
         if (control != null) {
             try {
                 if (speed > 0 && pitch > 0) {
@@ -740,6 +758,7 @@ public class MusicManager implements IPlayControl {
 
     /**
      * 判断当前的音乐是不是正在播放的音乐
+     *
      * @param currMusic
      * @return 判断当前的音乐是不是正在播放的音乐
      */
@@ -750,6 +769,7 @@ public class MusicManager implements IPlayControl {
 
     /**
      * 是否在暂停
+     *
      * @return 是否暂停
      */
     public static boolean isPaused() {
@@ -758,6 +778,7 @@ public class MusicManager implements IPlayControl {
 
     /**
      * 是否正在播放
+     *
      * @return 是否正在播放
      */
     public static boolean isPlaying() {
@@ -770,6 +791,7 @@ public class MusicManager implements IPlayControl {
 
     /**
      * 当前的音乐是否在播放
+     *
      * @param currMusic
      * @return 当前的音乐是否在播放
      */
@@ -779,6 +801,7 @@ public class MusicManager implements IPlayControl {
 
     /**
      * 当前音乐是否在暂停
+     *
      * @param currMusic
      * @return 当前音乐是否在暂停
      */
@@ -788,6 +811,7 @@ public class MusicManager implements IPlayControl {
 
     /**
      * 是否有缓存
+     *
      * @param songUrl
      * @return 是否有缓存
      */
@@ -801,6 +825,7 @@ public class MusicManager implements IPlayControl {
 
     /**
      * 获取缓存文件File对象
+     *
      * @param songUrl
      * @return 获取缓存文件File对象
      */
@@ -824,6 +849,7 @@ public class MusicManager implements IPlayControl {
 
     /**
      * 获取缓存文件大小
+     *
      * @param songUrl
      * @return 获取缓存文件大小
      */
@@ -849,6 +875,30 @@ public class MusicManager implements IPlayControl {
     }
 
     @Override
+    public float getPlaybackSpeed() {
+        if (control != null) {
+            try {
+                return control.getPlaybackSpeed();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public float getPlaybackPitch() {
+        if (control != null) {
+            try {
+                return control.getPlaybackPitch();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    @Override
     public void registerPlayerEventListener(IOnPlayerEventListener listener) {
         //Do nothing
     }
@@ -859,12 +909,12 @@ public class MusicManager implements IPlayControl {
     }
 
     @Override
-    public void registerTimerTaskListener(IOnTimerTaskListener listener) throws RemoteException {
+    public void registerTimerTaskListener(IOnTimerTaskListener listener) {
         //Do nothing
     }
 
     @Override
-    public void unregisterTimerTaskListener(IOnTimerTaskListener listener) throws RemoteException {
+    public void unregisterTimerTaskListener(IOnTimerTaskListener listener) {
         //Do nothing
     }
 

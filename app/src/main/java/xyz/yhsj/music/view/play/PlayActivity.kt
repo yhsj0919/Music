@@ -131,7 +131,7 @@ class PlayActivity : BaseActivity(), OnPlayerEventListener {
      */
     private fun updateProgress() {
         val progress = MusicManager.get().progress
-        val bufferProgress = MusicManager.get().bufferedPosition
+//        val bufferProgress = MusicManager.get().bufferedPosition
         if (seekBar.tag == null) {
             seekBar.progress = progress.toInt()
         }

@@ -4,16 +4,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.IBinder;
-import android.os.RemoteException;
+import android.support.v4.content.ContextCompat;
 
 import com.lzx.musiclibrary.MusicService;
 import com.lzx.musiclibrary.aidl.source.IPlayControl;
 import com.lzx.musiclibrary.cache.CacheConfig;
-import com.lzx.musiclibrary.control.PlayController;
 import com.lzx.musiclibrary.notification.NotificationCreater;
-import com.lzx.musiclibrary.playback.PlayStateObservable;
 
 /**
  * Created by xian on 2018/5/15.
@@ -21,6 +18,8 @@ import com.lzx.musiclibrary.playback.PlayStateObservable;
 
 public class MusicLibrary {
 
+    public static String ACTION_MUSICLIBRARY_INIT_FINISH = "ACTION_MUSICLIBRARY_INIT_FINISH";//服务初始化成功action
+    public static boolean isInitLibrary = false;
     private Context mContext;
     private boolean isUseMediaPlayer;
     private boolean isAutoPlayNext;
@@ -114,6 +113,9 @@ public class MusicLibrary {
     }
 
     private void init(boolean isStartService) {
+        if (isInitLibrary) {
+            return;
+        }
         Intent intent = new Intent(mContext, MusicService.class);
         intent.putExtra("isUseMediaPlayer", isUseMediaPlayer);
         intent.putExtra("isAutoPlayNext", isAutoPlayNext);
@@ -121,12 +123,7 @@ public class MusicLibrary {
         intent.putExtra("notificationCreater", mNotificationCreater);
         intent.putExtra("cacheConfig", mCacheConfig);
         if (isStartService) {
-            mContext.startService(intent);
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                mContext.startForegroundService(intent);
-//            }else {
-//                mContext.startService(intent);
-//            }
+            ContextCompat.startForegroundService(mContext, intent);
         }
         mContext.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
@@ -138,10 +135,14 @@ public class MusicLibrary {
             MusicManager.get().attachPlayControl(mContext, control);
             MusicManager.get().attachServiceConnection(this);
             MusicManager.get().attachMusicLibraryBuilder(mBuilder);
+            isInitLibrary = true;
+            //发送一个广播，可通过接受它来知道服务初始化成功
+            mContext.sendBroadcast(new Intent(ACTION_MUSICLIBRARY_INIT_FINISH));
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
+            isInitLibrary = false;
         }
     };
 }
