@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.jaeger.library.StatusBarUtil
 import com.lzx.musiclibrary.aidl.listener.OnPlayerEventListener
 import com.lzx.musiclibrary.aidl.model.SongInfo
+import com.lzx.musiclibrary.constans.PlayMode
 import com.lzx.musiclibrary.manager.MusicManager
 import com.lzx.musiclibrary.manager.TimerTaskManager
 import kotlinx.android.synthetic.main.activity_play.*
@@ -42,7 +43,7 @@ class PlayActivity : BaseActivity(), OnPlayerEventListener {
         initListener()
     }
 
-    fun initListener() {
+    private fun initListener() {
         btn_play.setOnClickListener {
             if (MusicManager.isPlaying()) {
                 MusicManager.get().pauseMusic()
@@ -65,7 +66,22 @@ class PlayActivity : BaseActivity(), OnPlayerEventListener {
             }
         }
 
-
+        btn_loop.setOnClickListener {
+            when (MusicManager.get().playMode) {
+                PlayMode.PLAY_IN_LIST_LOOP -> {
+                    MusicManager.get().playMode = PlayMode.PLAY_IN_SINGLE_LOOP
+                    Toast.makeText(this, "单曲循环", Toast.LENGTH_SHORT).show()
+                }
+                PlayMode.PLAY_IN_SINGLE_LOOP -> {
+                    MusicManager.get().playMode = PlayMode.PLAY_IN_RANDOM
+                    Toast.makeText(this, "随机播放", Toast.LENGTH_SHORT).show()
+                }
+                PlayMode.PLAY_IN_RANDOM -> {
+                    MusicManager.get().playMode = PlayMode.PLAY_IN_LIST_LOOP
+                    Toast.makeText(this, "列表循环", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         MusicManager.get().addPlayerEventListener(this)
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {

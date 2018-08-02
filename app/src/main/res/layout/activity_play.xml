@@ -108,12 +108,13 @@
             android:src="@drawable/play_btn_next_selector" />
 
         <ImageView
+            android:id="@+id/btn_loop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:layout_toLeftOf="@id/btn_prev"
-            android:src="@mipmap/play_icn_loop" />
+            android:src="@drawable/play_btn_loop_selector" />
 
         <ImageView
             android:layout_width="wrap_content"
