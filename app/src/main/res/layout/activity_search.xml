@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/app_bg"
     tools:context=".view.search.SearchActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -162,7 +163,6 @@
                 android:text="播放页面"
                 android:textSize="12dp" />
 
-
             <TextView
                 android:id="@+id/action_next"
                 android:layout_width="wrap_content"
@@ -195,6 +195,23 @@
                 android:padding="8dp"
                 android:text="上"
                 android:textSize="14dp" />
+
+
+            <xyz.yhsj.music.widget.PlayButton
+                android:id="@+id/playButton"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_toLeftOf="@+id/action_previous"
+                android:clickable="true"
+                app:bigCircleColor="#d99191"
+                app:circleColor="#00acaaaa"
+                app:radius="20dp"
+                app:rectColor="#d99191"
+                app:ringColor="#2c59b3"
+                app:strokeWidth="3dp"
+                app:textColor="#d99191" />
 
 
         </RelativeLayout>

@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@mipmap/fm_run_song_bg"
+    android:background="@mipmap/app_bg"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -10,12 +10,13 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.AppBarOverlay"
+        app:titleTextColor="#181818"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
         app:subtitleTextAppearance="@style/Toolbar.SubTitleText"
-        app:subtitleTextColor="#cecece"
-        android:minHeight="?attr/actionBarSize">
+        app:subtitleTextColor="#7a7978"
+        app:titleTextAppearance="@style/Toolbar.TitleText">
 
     </android.support.v7.widget.Toolbar>
 
@@ -29,71 +30,84 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:lrcAnimationDuration="1000"
-            app:lrcCurrentTextColor="#e9ff42"
-            app:lrcDividerHeight="24dp"
+            app:lrcCurrentTextColor="#181818"
+            app:lrcDividerHeight="20dp"
             app:lrcLabel="找不到歌词(@_@)"
-            app:lrcNormalTextColor="#BDBDBD"
+            app:lrcNormalTextColor="#767574"
             app:lrcPadding="40dp"
-            app:lrcTextSize="16sp"
-            app:lrcTimeTextColor="#BDBDBD"
-            app:lrcTimelineColor="#80BDBDBD"
-            app:lrcTimelineTextColor="#9FA8DA" />
+            app:lrcTextSize="15dp"
+            app:lrcTimeTextColor="#767574"
+            app:lrcTimelineColor="#b7b7b7"
+            app:lrcTimelineTextColor="#454545" />
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingTop="5dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="5dp">
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_play_time"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
-            android:gravity="center"
-            android:text="00:00"
-            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp">
 
         <SeekBar
             android:id="@+id/seekBar"
             style="@style/Widget.SeekBar.Normal"
-            android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:max="1000" />
 
         <TextView
-            android:id="@+id/tv_song_time"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
-            android:gravity="center"
+            android:id="@+id/tv_play_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seekBar"
+            android:layout_marginLeft="26dp"
+            android:layout_marginTop="4dp"
+            android:singleLine="true"
             android:text="00:00"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
+            android:textColor="#767574"
+            android:textSize="10dp" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_song_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seekBar"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="26dp"
+            android:singleLine="true"
+            android:text="00:00"
+            android:textColor="#767574"
+            android:textSize="10dp" />
 
 
         <ImageView
             android:id="@+id/btn_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/seekBar"
             android:layout_centerInParent="true"
+            android:layout_marginTop="32dp"
             android:clickable="true"
-            android:src="@drawable/play_btn_play_selector" />
+            android:src="@drawable/play_btn_pause_selector" />
 
         <ImageView
             android:id="@+id/btn_prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_alignTop="@id/btn_play"
+            android:layout_alignBottom="@+id/btn_play"
+            android:layout_marginRight="20dp"
             android:layout_toLeftOf="@id/btn_play"
             android:clickable="true"
             android:src="@drawable/play_btn_prev_selector" />
@@ -102,7 +116,10 @@
             android:id="@+id/btn_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/btn_play"
+            android:layout_alignBottom="@+id/btn_play"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/btn_play"
             android:clickable="true"
             android:src="@drawable/play_btn_next_selector" />
@@ -111,17 +128,23 @@
             android:id="@+id/btn_loop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/btn_play"
+            android:layout_alignBottom="@+id/btn_play"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="24dp"
             android:layout_toLeftOf="@id/btn_prev"
+            android:clickable="true"
             android:src="@drawable/play_btn_loop_selector" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/btn_play"
+            android:layout_alignBottom="@+id/btn_play"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="24dp"
             android:layout_toRightOf="@id/btn_next"
-            android:src="@mipmap/play_icn_src" />
+            android:clickable="true"
+            android:src="@drawable/play_btn_list_selector" />
     </RelativeLayout>
 </LinearLayout>

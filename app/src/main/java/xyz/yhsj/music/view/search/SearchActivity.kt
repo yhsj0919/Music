@@ -13,6 +13,7 @@ import com.jaeger.library.StatusBarUtil
 import com.lzx.musiclibrary.aidl.listener.OnPlayerEventListener
 import com.lzx.musiclibrary.aidl.model.SongInfo
 import com.lzx.musiclibrary.manager.MusicManager
+import com.lzx.musiclibrary.manager.TimerTaskManager
 import com.sunfusheng.glideimageview.GlideImageLoader
 import kotlinx.android.synthetic.main.activity_search.*
 import top.wefor.circularanim.CircularAnim
@@ -25,6 +26,7 @@ import xyz.yhsj.music.utils.toSongInfo
 import xyz.yhsj.music.view.base.BaseActivity
 import xyz.yhsj.music.view.play.PlayActivity
 import xyz.yhsj.music.view.search.adapter.SearchListAdapter
+import xyz.yhsj.music.widget.PlayButton
 
 
 @SuppressLint("Registered")
@@ -38,6 +40,8 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
 
     lateinit var listAdapter: SearchListAdapter
 
+    lateinit var mTimerTaskManager: TimerTaskManager
+
     private var site = MusicSite.QQ
 
     override fun init() {
@@ -50,6 +54,12 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
         recyclerView.adapter = listAdapter
         //添加Android自带的分割线
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+
+        mTimerTaskManager = TimerTaskManager()
+
+        mTimerTaskManager.setUpdateProgressTask(this::updateProgress)
+
         initListener()
     }
 
@@ -130,7 +140,6 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
             song_name.text = "${listAdapter.data[i].title}-${listAdapter.data[i].author}"
             song_album.text = listAdapter.data[i].albumName
             GlideImageLoader.create(song_pic).loadImage(listAdapter.data[i].pic, R.mipmap.ic_launcher)
-
             val musicList = listAdapter.data.map {
                 it.toSongInfo()
             }
@@ -174,18 +183,24 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
     }
 
     override fun onPlayerStart() {
+        playButton.setStatus(PlayButton.START_STATUS)
+        mTimerTaskManager.scheduleSeekBarUpdate()
         action_play.text = "停"
     }
 
     override fun onPlayerPause() {
+        mTimerTaskManager.scheduleSeekBarUpdate()
+        playButton.setStatus(PlayButton.FINISH_STATUS)
         action_play.text = "播"
     }
 
     override fun onPlayCompletion() {
+        playButton.setStatus(PlayButton.FINISH_STATUS)
         action_play.text = "播"
     }
 
     override fun onPlayerStop() {
+        playButton.setStatus(PlayButton.FINISH_STATUS)
         action_play.text = "播"
     }
 
@@ -229,6 +244,18 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
                     }
                 }
     }
+
+    /**
+     * 更新进度
+     */
+    private fun updateProgress() {
+        val progress = MusicManager.get().progress
+//        val bufferProgress = MusicManager.get().bufferedPosition
+        playButton.setProgress(progress.toInt())
+
+        playButton.setmTotalProgress(MusicManager.get().duration)
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

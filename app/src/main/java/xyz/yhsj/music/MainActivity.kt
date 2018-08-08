@@ -8,6 +8,7 @@ import android.provider.Settings
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.animation.AccelerateInterpolator
+import com.jaeger.library.StatusBarUtil
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_main.*
 import top.wefor.circularanim.CircularAnim
@@ -21,6 +22,7 @@ class MainActivity : BaseActivity() {
     override fun getToolbar(): Toolbar? = toolbar
 
     override fun init() {
+        StatusBarUtil.setColor(this@MainActivity, resources.getColor(R.color.colorPrimary), 0)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 

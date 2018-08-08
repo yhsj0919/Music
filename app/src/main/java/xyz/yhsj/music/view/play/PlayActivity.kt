@@ -22,6 +22,8 @@ class PlayActivity : BaseActivity(), OnPlayerEventListener {
 
     override fun getToolbar(): Toolbar? = toolbar
     override fun init() {
+        supportActionBar!!.setHomeAsUpIndicator(R.mipmap.home_down)
+
         StatusBarUtil.setTranslucent(this, 0)
 
         mTimerTaskManager = TimerTaskManager()
@@ -32,6 +34,18 @@ class PlayActivity : BaseActivity(), OnPlayerEventListener {
         val music: SongInfo? = MusicManager.get().currPlayingMusic
         supportActionBar?.title = music?.songName ?: ""
         supportActionBar?.subtitle = music?.artist ?: ""
+
+        when (MusicManager.get().playMode) {
+            PlayMode.PLAY_IN_LIST_LOOP -> {
+                btn_loop.setImageResource(R.drawable.play_btn_loop_selector)
+            }
+            PlayMode.PLAY_IN_SINGLE_LOOP -> {
+                btn_loop.setImageResource(R.drawable.play_btn_current_selector)
+            }
+            PlayMode.PLAY_IN_RANDOM -> {
+                btn_loop.setImageResource(R.drawable.play_btn_shuffle_selector)
+            }
+        }
 
         lrcView.loadLrc(music?.tempInfo?.temp_1?.replace("<[0-9]*>".toRegex(), ""))
 
@@ -70,15 +84,15 @@ class PlayActivity : BaseActivity(), OnPlayerEventListener {
             when (MusicManager.get().playMode) {
                 PlayMode.PLAY_IN_LIST_LOOP -> {
                     MusicManager.get().playMode = PlayMode.PLAY_IN_SINGLE_LOOP
-                    Toast.makeText(this, "单曲循环", Toast.LENGTH_SHORT).show()
+                    btn_loop.setImageResource(R.drawable.play_btn_current_selector)
                 }
                 PlayMode.PLAY_IN_SINGLE_LOOP -> {
                     MusicManager.get().playMode = PlayMode.PLAY_IN_RANDOM
-                    Toast.makeText(this, "随机播放", Toast.LENGTH_SHORT).show()
+                    btn_loop.setImageResource(R.drawable.play_btn_shuffle_selector)
                 }
                 PlayMode.PLAY_IN_RANDOM -> {
                     MusicManager.get().playMode = PlayMode.PLAY_IN_LIST_LOOP
-                    Toast.makeText(this, "列表循环", Toast.LENGTH_SHORT).show()
+                    btn_loop.setImageResource(R.drawable.play_btn_loop_selector)
                 }
             }
         }
