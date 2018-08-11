@@ -7,7 +7,6 @@
         <attr name="circleColor" format="color" /><!--内圆颜色-->
         <attr name="ringColor" format="color" /><!--进度条颜色-->
         <attr name="totalProgress" format="integer" /><!--总进度-->
-        <attr name="textColor" format="color|reference" /><!--字体颜色-->
         <attr name="bigCircleColor" format="color" /><!--外圆颜色-->
         <attr name="rectColor" format="color" /><!--方形的颜色-->
     </declare-styleable>

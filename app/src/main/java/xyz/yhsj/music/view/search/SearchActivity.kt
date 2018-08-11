@@ -7,6 +7,7 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.Toast
 import com.jaeger.library.StatusBarUtil
@@ -55,10 +56,24 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
         //添加Android自带的分割线
         recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
-
         mTimerTaskManager = TimerTaskManager()
-
         mTimerTaskManager.setUpdateProgressTask(this::updateProgress)
+
+        val music: SongInfo? = MusicManager.get().currPlayingMusic
+
+
+        if (music != null) {
+            play_Layout.visibility = View.VISIBLE
+            song_name.text = "${music?.songName}-${music?.artist}"
+            song_album.text = music?.albumInfo?.albumName
+            GlideImageLoader.create(song_pic).loadImage(music?.songCover, R.mipmap.ic_launcher)
+        } else {
+            play_Layout.visibility = View.GONE
+        }
+        if (MusicManager.isPlaying()){
+            playButton.setStatus(PlayButton.PAUSE_STATUS)
+            mTimerTaskManager.scheduleSeekBarUpdate()
+        }
 
         initListener()
     }
@@ -66,22 +81,13 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
     @SuppressLint("SetTextI18n")
     private fun initListener() {
         MusicManager.get().addPlayerEventListener(this)
-        action_play.setOnClickListener {
+        playButton.setOnClickListener {
             if (MusicManager.isPlaying()) {
                 MusicManager.get().pauseMusic()
             } else {
                 MusicManager.get().resumeMusic()
             }
         }
-
-        action_previous.setOnClickListener {
-            if (MusicManager.get().hasPre()) {
-                MusicManager.get().playPre()
-            } else {
-                Toast.makeText(this, "没有上一首了", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         action_next.setOnClickListener {
             if (MusicManager.get().hasNext()) {
                 MusicManager.get().playNext()
@@ -135,6 +141,7 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
         }
 
         listAdapter.setOnItemClickListener { _, _, i ->
+            play_Layout.visibility = View.VISIBLE
             LogUtil.e("点击的结果", listAdapter.data[i].toString())
             Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].title}", Toast.LENGTH_SHORT).show()
             song_name.text = "${listAdapter.data[i].title}-${listAdapter.data[i].author}"
@@ -175,7 +182,6 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
         }
     }
 
-
     override fun onMusicSwitch(music: SongInfo) {
         song_name.text = "${music.songName}-${music.artist}"
         song_album.text = music.albumInfo.albumName
@@ -183,25 +189,21 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
     }
 
     override fun onPlayerStart() {
-        playButton.setStatus(PlayButton.START_STATUS)
         mTimerTaskManager.scheduleSeekBarUpdate()
-        action_play.text = "停"
+        playButton.setStatus(PlayButton.PAUSE_STATUS)
     }
 
     override fun onPlayerPause() {
         mTimerTaskManager.scheduleSeekBarUpdate()
-        playButton.setStatus(PlayButton.FINISH_STATUS)
-        action_play.text = "播"
+        playButton.setStatus(PlayButton.PLAY_STATUS)
     }
 
     override fun onPlayCompletion() {
-        playButton.setStatus(PlayButton.FINISH_STATUS)
-        action_play.text = "播"
+        playButton.setStatus(PlayButton.PLAY_STATUS)
     }
 
     override fun onPlayerStop() {
-        playButton.setStatus(PlayButton.FINISH_STATUS)
-        action_play.text = "播"
+        playButton.setStatus(PlayButton.PLAY_STATUS)
     }
 
     override fun onError(errorMsg: String?) {
@@ -250,10 +252,9 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
      */
     private fun updateProgress() {
         val progress = MusicManager.get().progress
-//        val bufferProgress = MusicManager.get().bufferedPosition
         playButton.setProgress(progress.toInt())
 
-        playButton.setmTotalProgress(MusicManager.get().duration)
+        playButton.setTotalProgress(MusicManager.get().duration)
     }
 
 

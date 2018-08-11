@@ -147,8 +147,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/song_album"
+                android:layout_toLeftOf="@+id/playButton"
                 android:layout_toRightOf="@+id/song_pic"
                 android:padding="4dp"
+                android:singleLine="true"
                 android:text="播放页面"
                 android:textSize="14dp" />
 
@@ -158,60 +160,38 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="4dp"
+                android:layout_toLeftOf="@+id/playButton"
                 android:layout_toRightOf="@+id/song_pic"
                 android:padding="4dp"
+                android:singleLine="true"
                 android:text="播放页面"
                 android:textSize="12dp" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/action_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="?android:attr/selectableItemBackground"
                 android:padding="8dp"
-                android:text="下"
-                android:textSize="14dp" />
-
-            <TextView
-                android:id="@+id/action_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/action_next"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="8dp"
-                android:text="播"
-                android:textSize="14dp" />
-
-            <TextView
-                android:id="@+id/action_previous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/action_play"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="8dp"
-                android:text="上"
-                android:textSize="14dp" />
-
+                android:src="@mipmap/st_next" />
 
             <xyz.yhsj.music.widget.PlayButton
                 android:id="@+id/playButton"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:layout_toLeftOf="@+id/action_previous"
+                android:layout_toLeftOf="@+id/action_next"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                app:bigCircleColor="#d99191"
+                app:bigCircleColor="#bdb9b8"
                 app:circleColor="#00acaaaa"
-                app:radius="20dp"
-                app:rectColor="#d99191"
+                app:radius="15dp"
+                app:rectColor="#e6575656"
                 app:ringColor="#2c59b3"
-                app:strokeWidth="3dp"
-                app:textColor="#d99191" />
+                app:strokeWidth="1.5dp" />
 
 
         </RelativeLayout>
