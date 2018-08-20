@@ -85,6 +85,8 @@ public class ExoPlayback implements Playback, FocusAndLockManager.AudioFocusChan
 
     private HttpProxyCacheServer mProxyCacheServer;
     private HttpProxyCacheServer.Builder builder;
+    private long mErrorProgress = 0;
+    private boolean isStateError = false;
 
     public ExoPlayback(Context context, CacheConfig cacheConfig, boolean isGiveUpAudioFocusManager) {
         Context applicationContext = context.getApplicationContext();
@@ -124,9 +126,9 @@ public class ExoPlayback implements Playback, FocusAndLockManager.AudioFocusChan
         if (releasePlayer && mExoPlayer != null) {
             mExoPlayer.release();
             mExoPlayer.removeListener(mEventListener);
-            mExoPlayer = null;
             mExoPlayerNullIsStopped = true;
             mPlayOnFocusGain = false;
+            mExoPlayer = null;
         }
         mFocusAndLockManager.releaseWifiLock();
     }
@@ -141,7 +143,6 @@ public class ExoPlayback implements Playback, FocusAndLockManager.AudioFocusChan
         mFocusAndLockManager.giveUpAudioFocus();
         unregisterAudioNoisyReceiver();
         releaseResources(true);
-
     }
 
     @Override
@@ -156,22 +157,26 @@ public class ExoPlayback implements Playback, FocusAndLockManager.AudioFocusChan
         //STATE_READY     可以从当前位置立即进行播放。 如果  {@link #getPlayWhenReady（）}为true，立即播放，否则暂停。
         //STATE_ENDED     已经完成播放媒体。
         int state = State.STATE_IDLE;
-        if (mExoPlayer == null) {
-            state = mExoPlayerNullIsStopped ? State.STATE_STOP : State.STATE_IDLE;
+        if (isStateError) {
+            state = State.STATE_ERROR;
         } else {
-            switch (mExoPlayer.getPlaybackState()) {
-                case Player.STATE_IDLE:
-                    state = State.STATE_IDLE;
-                    break;
-                case Player.STATE_BUFFERING:
-                    state = State.STATE_ASYNC_LOADING;
-                    break;
-                case Player.STATE_READY:
-                    state = mExoPlayer.getPlayWhenReady() ? State.STATE_PLAYING : State.STATE_PAUSED;
-                    break;
-                case Player.STATE_ENDED:
-                    state = State.STATE_ENDED;
-                    break;
+            if (mExoPlayer == null) {
+                state = mExoPlayerNullIsStopped ? State.STATE_STOP : State.STATE_IDLE;
+            } else {
+                switch (mExoPlayer.getPlaybackState()) {
+                    case Player.STATE_IDLE:
+                        state = State.STATE_IDLE;
+                        break;
+                    case Player.STATE_BUFFERING:
+                        state = State.STATE_ASYNC_LOADING;
+                        break;
+                    case Player.STATE_READY:
+                        state = mExoPlayer.getPlayWhenReady() ? State.STATE_PLAYING : State.STATE_PAUSED;
+                        break;
+                    case Player.STATE_ENDED:
+                        state = State.STATE_ENDED;
+                        break;
+                }
             }
         }
         return state;
@@ -360,7 +365,11 @@ public class ExoPlayback implements Playback, FocusAndLockManager.AudioFocusChan
         if (mExoPlayer != null) {
             registerAudioNoisyReceiver();
             mExoPlayer.seekTo(position);
-
+        } else {
+            if (mCurrentMediaSongInfo != null) {
+                play(mCurrentMediaSongInfo);
+                mExoPlayer.seekTo(position);
+            }
         }
     }
 
@@ -377,6 +386,11 @@ public class ExoPlayback implements Playback, FocusAndLockManager.AudioFocusChan
     @Override
     public int getDuration() {
         return mExoPlayer != null ? (int) mExoPlayer.getDuration() : 0;
+    }
+
+    @Override
+    public void setErrorProgress(int errorProgress) {
+        mErrorProgress = errorProgress;
     }
 
     @Override
@@ -460,6 +474,10 @@ public class ExoPlayback implements Playback, FocusAndLockManager.AudioFocusChan
             if (mExoPlayerNullIsStopped) {
                 mExoPlayerNullIsStopped = false;
             }
+            if (mErrorProgress != 0) {
+                seekTo(mErrorProgress);
+                mErrorProgress = 0;
+            }
         }
     }
 
@@ -513,6 +531,7 @@ public class ExoPlayback implements Playback, FocusAndLockManager.AudioFocusChan
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+            isStateError = false;
             if (mCallback != null) {
                 switch (playbackState) {
                     case Player.STATE_IDLE:
@@ -544,6 +563,9 @@ public class ExoPlayback implements Playback, FocusAndLockManager.AudioFocusChan
 
         @Override
         public void onPlayerError(ExoPlaybackException error) {
+            mCurrentMediaId = "";
+            mErrorProgress = getCurrentStreamPosition();
+            isStateError = true;
             final String what;
             switch (error.type) {
                 case ExoPlaybackException.TYPE_SOURCE:

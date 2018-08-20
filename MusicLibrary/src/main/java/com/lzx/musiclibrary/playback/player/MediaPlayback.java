@@ -52,6 +52,7 @@ public class MediaPlayback implements Playback,
     private Callback mCallback;
     private Context mContext;
     private FocusAndLockManager mFocusAndLockManager;
+    private long mErrorProgress = 0;
 
     private int mPlayState = State.STATE_IDLE;
 
@@ -130,6 +131,10 @@ public class MediaPlayback implements Playback,
                 mPlayOnFocusGain = false;
                 if (mCallback != null) {
                     mCallback.onPlaybackStatusChanged(mPlayState);
+                }
+                if (mErrorProgress != 0) {
+                    seekTo(mErrorProgress);
+                    mErrorProgress = 0;
                 }
             }
         }
@@ -314,6 +319,11 @@ public class MediaPlayback implements Playback,
     }
 
     @Override
+    public void setErrorProgress(int errorProgress) {
+        mErrorProgress = errorProgress;
+    }
+
+    @Override
     public SongInfo getCurrentMediaSongInfo() {
         return mCurrentMediaSongInfo;
     }
@@ -398,6 +408,8 @@ public class MediaPlayback implements Playback,
         if (mCallback != null) {
             mCallback.onError("MediaPlayer error " + what);
         }
+        mErrorProgress = getCurrentStreamPosition();
+        mCurrentMediaId = "";
         return false;
     }
 
@@ -413,7 +425,7 @@ public class MediaPlayback implements Playback,
 
     @Override
     public void onSeekComplete(MediaPlayer mediaPlayer) {
-       //TODO
+        //TODO
         LogUtil.i("-------------------onSeekComplete------------------");
     }
 }
