@@ -136,7 +136,7 @@
                 android:layout_height="1px"
                 android:background="#cdcdcd" />
 
-            <ImageView
+            <com.sunfusheng.GlideImageView
                 android:id="@+id/song_pic"
                 android:layout_width="56dp"
                 android:layout_height="56dp"

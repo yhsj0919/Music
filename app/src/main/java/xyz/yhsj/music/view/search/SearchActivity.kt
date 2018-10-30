@@ -11,11 +11,13 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.Toast
 import com.jaeger.library.StatusBarUtil
+
 import com.lzx.musiclibrary.aidl.listener.OnPlayerEventListener
 import com.lzx.musiclibrary.aidl.model.SongInfo
 import com.lzx.musiclibrary.manager.MusicManager
 import com.lzx.musiclibrary.manager.TimerTaskManager
-import com.sunfusheng.glideimageview.GlideImageLoader
+import com.sunfusheng.GlideImageLoader
+
 import kotlinx.android.synthetic.main.activity_search.*
 import top.wefor.circularanim.CircularAnim
 import xyz.yhsj.kmusic.KMusic
@@ -64,13 +66,13 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
 
         if (music != null) {
             play_Layout.visibility = View.VISIBLE
-            song_name.text = "${music?.songName}-${music?.artist}"
-            song_album.text = music?.albumInfo?.albumName
-            GlideImageLoader.create(song_pic).loadImage(music?.songCover, R.mipmap.ic_launcher)
+            song_name.text = "${music.songName}-${music.artist}"
+            song_album.text = music.albumInfo?.albumName
+            song_pic.load(music.songCover, R.mipmap.ic_launcher)
         } else {
             play_Layout.visibility = View.GONE
         }
-        if (MusicManager.isPlaying()){
+        if (MusicManager.isPlaying()) {
             playButton.setStatus(PlayButton.PAUSE_STATUS)
             mTimerTaskManager.scheduleSeekBarUpdate()
         }
@@ -146,7 +148,8 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
             Toast.makeText(this@SearchActivity, "开始播放:${listAdapter.data[i].title}", Toast.LENGTH_SHORT).show()
             song_name.text = "${listAdapter.data[i].title}-${listAdapter.data[i].author}"
             song_album.text = listAdapter.data[i].albumName
-            GlideImageLoader.create(song_pic).loadImage(listAdapter.data[i].pic, R.mipmap.ic_launcher)
+
+            song_pic.load(listAdapter.data[i].pic, R.mipmap.ic_launcher)
             val musicList = listAdapter.data.map {
                 it.toSongInfo()
             }
@@ -185,7 +188,7 @@ class SearchActivity : BaseActivity(), OnPlayerEventListener {
     override fun onMusicSwitch(music: SongInfo) {
         song_name.text = "${music.songName}-${music.artist}"
         song_album.text = music.albumInfo.albumName
-        GlideImageLoader.create(song_pic).loadImage(music.songCover, R.mipmap.ic_launcher)
+        song_pic.load(music.songCover, R.mipmap.ic_launcher)
     }
 
     override fun onPlayerStart() {

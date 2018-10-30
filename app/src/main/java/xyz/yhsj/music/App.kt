@@ -1,9 +1,8 @@
 package xyz.yhsj.music
 
-import android.animation.Animator
-import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
+import android.support.multidex.MultiDexApplication
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import com.lzx.musiclibrary.cache.CacheConfig
@@ -11,10 +10,9 @@ import com.lzx.musiclibrary.cache.CacheUtils
 import com.lzx.musiclibrary.manager.MusicLibrary
 import com.lzx.musiclibrary.notification.NotificationCreater
 import com.lzx.musiclibrary.utils.BaseUtil
-
 import top.wefor.circularanim.CircularAnim
 
-class App : Application() {
+class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
